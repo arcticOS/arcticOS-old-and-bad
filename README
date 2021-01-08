@@ -1,3 +1,22 @@
-arcticOS - A FOSS operating system for low-power phones. Designed to be compatible with Arduino & the Arduino IDE.
+arcticOS - A FOSS operating system for low-power phones. 
+Designed to be compatible with Arduino & the Arduino IDE.
 
++=====================================================+
+|                        NOTE:                        |
+|   I am in the middle of rewriting the whole thing.  |
+|     Most things don't work properly and lots of     |
+|       features have been temporarily removed.       |
++=====================================================+
 
+About arcticOS:
+	arcticOS is a free (GPL3) operating system that is designed
+	to run on low-power devices like microcontrollers and 
+	dumbphones.
+	
+	By default, it has a minimalist phone UI that
+	can be easily replaced or adapted into whatever you need - 
+	whether that be a clock UI, touchscreen interface, or status
+	monitor.
+	
+	It uses a unique, semi-cooperative multitasking scheme that is
+	easy to work with, even on the low level.
