@@ -123,7 +123,7 @@ void loop() {
 	#ifdef BOARD_HAS_KEYPAD
 		for(int i = 0; i < BOARD_KEYPAD_KEY_COUNT; i++) {
 			if(board_keypad_pressed[i] == 1) {
-				board_debug_print(i);
+				board_debug_print(board_keypad_chars[i]);
 				board_debug_print(",");
 			}
 		}

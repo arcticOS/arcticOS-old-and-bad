@@ -71,6 +71,10 @@
 		Serial.print(value);
 	}
 	
+	void board_debug_print(char value) {
+		Serial.print(value);
+	}
+	
 	/*
 	 * IRQ
 	 */
@@ -111,6 +115,8 @@
 	#define BOARD_KEYPAD_KEY_COUNT 15
 	
 	int board_keypad_pressed[BOARD_KEYPAD_KEY_COUNT];
+	
+	char board_keypad_chars[BOARD_KEYPAD_KEY_COUNT] = {'A', 'O', 'E', '1', '2', '3', '4', '5', '6', '7', '8', '9', '*', '0', '#'};
 	
 	int board_keypad_pins_output[3] = {33, 35, 37};
 	int board_keypad_pins_input[5] = {23, 25, 27, 29, 31};

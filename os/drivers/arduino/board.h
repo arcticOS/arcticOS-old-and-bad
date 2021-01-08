@@ -54,6 +54,10 @@
 		Serial.print(value);
 	}
 	
+	void board_debug_print(char value) {
+		Serial.print(value);
+	}
+	
 	/*
 	 * IRQ
 	 */
