@@ -17,36 +17,38 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
  * MA 02110-1301, USA.
  * 
- * I2C FRAM driver
+ * Arduino board definition
  */
 
-#ifndef DRIVER_FLASH
-	#define DRIVER_FLASH
-	#define DRIVER_FLASH_NAME "I2C FRAM\n"
+#ifndef BOARD
+	#define BOARD
+
+	#define TIMER_INTERRUPT_DEBUG 0
+	#define USE_TIMER_1 false
+	#define USE_TIMER_2 true
+	#define USE_TIMER_3 false
+	#define USE_TIMER_4 false
+	#define USE_TIMER_5 false
 	
-	#ifndef BOARD_HAS_I2C
-		#error "The I2C FRAM driver requires the board to have I2C functionality!"
-	#endif
+	#include <TimerInterrupt.h>
 	
-	#define FLASH_ADDRESS 0x50
+	void (*board_irq_handler)(void);
 	
-	uint8_t flash_get_byte(uint16_t addr) {
-		// Tell the chip where we want data from
-		i2c_start(FLASH_ADDRESS);
-		i2c_send_byte(addr >> 8);
-		i2c_send_byte(addr & 0xFF);
-		i2c_end();
-		
-		// Get the byte
-		i2c_request(FLASH_ADDRESS, (uint8_t) 1);
-		return (uint8_t) i2c_get();
+	void board_init() {
+		Serial.begin(9600);
 	}
 	
-	void flash_set_byte(uint16_t addr, uint8_t value) {
-		i2c_start(FLASH_ADDRESS);
-		i2c_send_byte(addr >> 8);
-		i2c_send_byte(addr & 0xFF);
-		i2c_send_byte(value);
-		i2c_end();
+	void board_debug_print(const char* value) {
+		Serial.print(value);
+	}
+	
+	void board_debug_print(int value) {
+		Serial.print(value);
+	}
+	
+	void board_set_timed_irq(int tick_length, void* location) {
+		ITimer2.init();
+		board_irq_handler = location;
+		ITimer2.attachInterruptInterval(tick_length, board_irq_handler);
 	}
 #endif
