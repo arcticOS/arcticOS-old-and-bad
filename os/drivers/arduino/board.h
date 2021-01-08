@@ -18,6 +18,11 @@
  * MA 02110-1301, USA.
  * 
  * Arduino board definition
+ * 
+ * 
+ * TODO: 
+ * 	- i2c
+ *  - SPI(?)
  */
 
 #ifndef BOARD
@@ -38,6 +43,9 @@
 		Serial.begin(9600);
 	}
 	
+	/*
+	 * DEBUG
+	 */
 	void board_debug_print(const char* value) {
 		Serial.print(value);
 	}
@@ -46,9 +54,35 @@
 		Serial.print(value);
 	}
 	
+	/*
+	 * IRQ
+	 */
 	void board_set_timed_irq(int tick_length, void* location) {
 		ITimer2.init();
 		board_irq_handler = location;
 		ITimer2.attachInterruptInterval(tick_length, board_irq_handler);
+	}
+	
+	/*
+	 * GPIO
+	 */
+	#define BOARD_HAS_GPIO
+	#define BOARD_HAS_GPIO_PULLUP
+	void board_init_gpio(int port, int state) {
+		if(state == 0) { // Output
+			pinMode(port, OUTPUT);
+		} else if(state == 1) { // Input
+			pinMode(port, INPUT);
+		} else if(state == 2) { // Input Pullup
+			pinMode(port, INPUT_PULLUP);
+		}
+	}
+	
+	void board_gpio_out(int port, int state) {
+		digitalWrite(port, state);
+	}
+	
+	int board_gpio_in(int port) {
+		return digitalRead(port);
 	}
 #endif
