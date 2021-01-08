@@ -35,7 +35,7 @@
  * DRIVERS AND LIBRARIES
  */
  
-#include "drivers/arduino/board.h"
+#include "drivers/polar/board.h"
 
 /*
  * KERNEL STUFF
@@ -106,19 +106,28 @@ void kernel_multitask() {
  * OS STUFF
  */
  
-void preemption_test() {
-	board_debug_print("hello\n");
-}
- 
 // This is where we initialise the board and the kernel.
 void setup() {	
 	board_init();
 
 	board_set_timed_irq(10, kernel_multitask);
 	
-	kernel_add_task(&preemption_test, 0);
+	#ifdef BOARD_HAS_KEYPAD
+		board_init_keypad();
+		
+		kernel_add_task(board_keypad_refresh, 0);
+	#endif
 }
 
 void loop() {
-	
+	#ifdef BOARD_HAS_KEYPAD
+		for(int i = 0; i < BOARD_KEYPAD_KEY_COUNT; i++) {
+			if(board_keypad_pressed[i] == 1) {
+				board_debug_print(i);
+				board_debug_print(",");
+			}
+		}
+		
+		board_debug_print("\n");
+	#endif
 }
