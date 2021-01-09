@@ -19,7 +19,6 @@
  * 
  * Main OS file
  * For the Arduino IDE
- * Not using the Arduino IDE? Compile "os.cpp" instead.
  * 
  * This is in the process of being completely rewritten to be smaller, faster, and more modular.
  */
