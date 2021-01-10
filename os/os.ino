@@ -111,6 +111,11 @@ void setup() {
 
 	board_set_timed_irq(10, kernel_multitask);
 	
+	#ifdef BOARD_HAS_SCREEN
+		board_screen_init();
+		board_screen_text(2, "Hello from arcticOS!");
+	#endif
+	
 	#ifdef BOARD_HAS_KEYPAD
 		board_init_keypad();
 		

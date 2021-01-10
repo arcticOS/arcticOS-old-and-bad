@@ -145,4 +145,46 @@
 			board_gpio_out(board_keypad_pins_output[x], 1);
 		}
 	}
+	
+	#define BOARD_HAS_SCREEN
+	
+	int board_screen_width = 0;
+	int board_screen_height = 0;
+	
+	void board_screen_init() {
+		Serial1.begin(9600);
+		Serial1.readStringUntil('\n'); // Wait for screen ready
+		
+		// TODO: Get screen width and height
+	}
+	
+	void board_screen_clear() {
+		Serial1.println("C");
+		Serial1.readStringUntil('\n');
+	}
+	
+	void board_screen_print_value(int value) {
+		if(value < 100) Serial.print("0");
+		if(value < 10) Serial.print("0");
+		Serial.print(value);
+	}
+	
+	void board_screen_rect(int x, int y, int w, int h) {
+		Serial1.print("R");
+		board_screen_print_value(x);
+		board_screen_print_value(x);
+		board_screen_print_value(x);
+		board_screen_print_value(x);
+		Serial1.print('\n');
+		Serial1.readStringUntil('\n');
+	}
+	
+	void board_screen_text(int size, const char* data) {
+		if(size < 1) return;
+		if(size > 4) return;
+		Serial1.print("T");
+		Serial1.print(size);
+		Serial1.println(data);
+		Serial1.readStringUntil('\n');
+	}
 #endif
