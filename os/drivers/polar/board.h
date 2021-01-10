@@ -138,7 +138,7 @@
 			for(int y = 0; y < 5; y++) {
 				int state = board_gpio_in(board_keypad_pins_input[y]);
 				
-				if(state == 0) board_keypad_pressed[(y*3) + x] = 1;
+				if(state == 0) board_keypad_pressed[(y*3) + x] ++;
 				else board_keypad_pressed[(y*3) + x] = 0;
 			}
 			
@@ -153,9 +153,14 @@
 	
 	void board_screen_init() {
 		Serial1.begin(9600);
-		Serial1.readStringUntil('\n'); // Wait for screen ready
+		String inString = Serial1.readStringUntil('\n'); // Wait for screen ready
 		
-		// TODO: Get screen width and height
+		board_screen_width = inString.substring(1, 4).toInt();
+		board_screen_height = inString.substring(5, 8).toInt();
+		
+		// If we failed to get the size just fuggin default to whatever I have plugged in lol
+		if(board_screen_width == 0) board_screen_width = 240;
+		if(board_screen_height == 0) board_screen_height = 320;
 	}
 	
 	void board_screen_clear() {
@@ -164,17 +169,27 @@
 	}
 	
 	void board_screen_print_value(int value) {
-		if(value < 100) Serial.print("0");
-		if(value < 10) Serial.print("0");
-		Serial.print(value);
+		if(value < 100) Serial1.print("0");
+		if(value < 10) Serial1.print("0");
+		Serial1.print(value);
 	}
 	
 	void board_screen_rect(int x, int y, int w, int h) {
 		Serial1.print("R");
 		board_screen_print_value(x);
+		board_screen_print_value(y);
+		board_screen_print_value(w);
+		board_screen_print_value(h);
+		Serial1.print('\n');
+		Serial1.readStringUntil('\n');
+	}
+	
+	void board_screen_clear(int x, int y, int w, int h) {
+		Serial1.print("A");
 		board_screen_print_value(x);
-		board_screen_print_value(x);
-		board_screen_print_value(x);
+		board_screen_print_value(y);
+		board_screen_print_value(w);
+		board_screen_print_value(h);
 		Serial1.print('\n');
 		Serial1.readStringUntil('\n');
 	}
@@ -186,5 +201,26 @@
 		Serial1.print(size);
 		Serial1.println(data);
 		Serial1.readStringUntil('\n');
+	}
+	
+	void board_screen_text(int x, int y, int size, const char* data) {
+		Serial1.print("P");
+		board_screen_print_value(x);
+		board_screen_print_value(y);
+		Serial1.print("\n");
+		board_screen_text(size, data);
+		Serial1.readStringUntil('\n');
+	}
+	
+	void board_screen_invert_text() {
+		Serial1.println("V");
+		Serial1.readStringUntil('\n');
+	}
+	
+	void board_screen_position(int x, int y) {
+		Serial1.print("P");
+		board_screen_print_value(x);
+		board_screen_print_value(x);
+		Serial1.print("\n");
 	}
 #endif

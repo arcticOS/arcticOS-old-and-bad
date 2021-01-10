@@ -35,6 +35,8 @@
 // Adafruit's shitty library can't handle hardware SPI for some fucking reason so we have to stick w/ software
 Adafruit_ILI9341 tft = Adafruit_ILI9341(TFT_CS, TFT_DC, TFT_MOSI, TFT_CLK, TFT_RST, TFT_MISO);
 
+int textColor = 0;
+
 void clearScreen() {
 	tft.fillScreen(ILI9341_WHITE);
 	tft.setCursor(0, 0);
@@ -42,7 +44,8 @@ void clearScreen() {
 
 void drawText(int textSize, String text) {
 	tft.setTextSize(textSize);
-	tft.setTextColor(ILI9341_BLACK);
+	if(textColor == 0) tft.setTextColor(ILI9341_BLACK);
+	else tft.setTextColor(ILI9341_WHITE);
 	tft.println(text);
 }
 
@@ -50,10 +53,15 @@ void drawRectangle(int x, int y, int w, int h) {
 	tft.fillRect(x, y, w, h, ILI9341_BLACK);
 }
 
+void clearRectangle(int x, int y, int w, int h) {
+	tft.fillRect(x, y, w, h, ILI9341_WHITE);
+}
+
 void setup() {
 	Serial.begin(9600);
+	Serial.setTimeout(300000);
 	tft.begin();
-	clearScreen();
+	//clearScreen();
 
 	Serial.println("R");
 }
@@ -82,6 +90,24 @@ void loop(void) {
 		int size = (int)inString.charAt(1) - 48;
 		String str = inString.substring(2);
 		drawText(size, str);
+		Serial.println("R");
+	} else if(inString.charAt(0) == 'P') { // Position
+		// Structure: P(3 characters representing an integer)(3 characters representing an integer)
+		int x = inString.substring(1, 4).toInt();
+		int y = inString.substring(4, 7).toInt();
+		tft.setCursor(x, y);
+		Serial.println("R");
+	} else if(inString.charAt(0) == 'A') { // Clear area
+		// Structure: A(3 characters representing an integer)(3 characters representing an integer)(3 characters representing an integer)(3 characters representing an integer)
+		int x = inString.substring(1, 4).toInt();
+		int y = inString.substring(4, 7).toInt();
+		int w = inString.substring(7, 10).toInt();
+		int h = inString.substring(10, 13).toInt();
+		clearRectangle(x, y, w, h);
+		Serial.println("R");
+	} else if(inString.charAt(0) == 'V') { // Invert text color
+		if(textColor) textColor = 0;
+		else textColor = 1;
 		Serial.println("R");
 	}
 }

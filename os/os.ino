@@ -30,6 +30,12 @@
 #define KERNEL_TASK_COUNT 16
 #define KERNEL_ENABLE_WATCHDOG // Print a debug message if multitasking takes too long.
  
+#define OS_NAV_UP_BUTTON '2'
+#define OS_NAV_DOWN_BUTTON '8'
+#define OS_NAV_LEFT_BUTTON '4'
+#define OS_NAV_RIGHT_BUTTON '6'
+#define OS_NAV_OK_BUTTON 'O'
+ 
 /*
  * DRIVERS AND LIBRARIES
  */
@@ -56,6 +62,25 @@ int kernel_allow_preemption = 0;
 int kernel_ticks_elapsed = 0;
 
 KernelTask* kernel_tasks[KERNEL_TASK_COUNT];
+
+void kernel_halt() {
+	kernel_allow_preemption = 0;
+	while(true) {}
+}
+
+void kernel_panic(int code) {
+	board_debug_print("Kernel PANIC!");
+	board_debug_print(code);
+	
+	#ifdef BOARD_HAS_SCREEN
+		board_screen_rect(0, 0, 8*6, 16);
+		board_screen_position(0, 0);
+		board_screen_text(1, "PANIC!");
+		board_screen_invert_text();
+		board_screen_text(1, "PANIC!");
+	#endif
+	kernel_halt();
+}
 
 void kernel_add_task(void* location, int interval) {
 	KernelTask* task = new KernelTask(location, interval);
@@ -104,6 +129,69 @@ void kernel_multitask() {
 /*
  * OS STUFF
  */
+
+#ifdef BOARD_HAS_KEYPAD
+	int os_debugmenu_wait_for_release[BOARD_KEYPAD_KEY_COUNT];
+#endif
+
+int os_debugmenu_item_selected = 0;
+ 
+void os_debugmenu() {
+	#ifdef BOARD_HAS_SCREEN
+		#ifdef BOARD_HAS_KEYPAD
+			const char* items[2] = {"Kernel Panic", "Other Test Item"};
+			
+			board_screen_text(2, "arcticOS Debug");
+			
+			for(int i = 0; i < 2; i++) {
+				if(i == os_debugmenu_item_selected) {
+					board_screen_invert_text();
+					board_screen_rect(0, 16 + (i * 8), board_screen_width, 8);
+					board_screen_text(1, items[i]);
+					board_screen_invert_text();
+				} else board_screen_text(1, items[i]);
+			}
+			
+			int refresh = 0;
+			
+			while(!refresh) { // Wait for user to do something
+				for(int i = 0; i < BOARD_KEYPAD_KEY_COUNT; i++) {
+					if(board_keypad_pressed[i] > 10) {
+						if(os_debugmenu_wait_for_release[i] == 0) {
+							if(board_keypad_chars[i] == OS_NAV_UP_BUTTON) {
+								os_debugmenu_wait_for_release[i] = 1;
+								if(os_debugmenu_item_selected > 0) os_debugmenu_item_selected --;
+								refresh = 1;
+							}
+							
+							if(board_keypad_chars[i] == OS_NAV_DOWN_BUTTON) {
+								os_debugmenu_wait_for_release[i] = 1;
+								if(os_debugmenu_item_selected < 1) os_debugmenu_item_selected ++;
+								refresh = 1;
+							}
+							
+							if(board_keypad_chars[i] == OS_NAV_OK_BUTTON) {
+								os_debugmenu_wait_for_release[i] = 1;
+								
+								if(os_debugmenu_item_selected == 0) {
+									kernel_panic(0);
+								}
+								
+								// Only add this when we actually need it
+								//refresh = 1;
+							}
+						}
+					} else {
+						if(board_keypad_pressed[i] == 0 && os_debugmenu_wait_for_release[i] == 1) os_debugmenu_wait_for_release[i] = 0;
+					}
+				}
+			}
+			
+			board_screen_clear(0, 16, board_screen_width, 8*2);
+			board_screen_position(0, 0);
+		#endif
+	#endif
+}
  
 // This is where we initialise the board and the kernel.
 void setup() {	
@@ -113,7 +201,7 @@ void setup() {
 	
 	#ifdef BOARD_HAS_SCREEN
 		board_screen_init();
-		board_screen_text(2, "Hello from arcticOS!");
+		board_screen_clear();
 	#endif
 	
 	#ifdef BOARD_HAS_KEYPAD
@@ -124,7 +212,9 @@ void setup() {
 }
 
 void loop() {
-	#ifdef BOARD_HAS_KEYPAD
+	os_debugmenu();
+	
+	/*#ifdef BOARD_HAS_KEYPAD
 		for(int i = 0; i < BOARD_KEYPAD_KEY_COUNT; i++) {
 			if(board_keypad_pressed[i] == 1) {
 				board_debug_print(board_keypad_chars[i]);
@@ -133,5 +223,5 @@ void loop() {
 		}
 		
 		board_debug_print("\n");
-	#endif
+	#endif*/
 }
