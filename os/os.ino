@@ -136,38 +136,42 @@ void kernel_multitask() {
 
 int os_debugmenu_item_selected = 0;
  
+#define OS_DEBUGMENU_ITEM_COUNT 2
+ 
+void os_debugmenu_refresh_selection() {
+	#ifdef BOARD_HAS_SCREEN
+		board_screen_clear(board_screen_width - 4, 8, 4, board_screen_height - 8);
+		board_screen_rect(board_screen_width - 4, 8 + (os_debugmenu_item_selected * 8), 4, 8);
+	#endif
+}
+ 
 void os_debugmenu() {
 	#ifdef BOARD_HAS_SCREEN
 		#ifdef BOARD_HAS_KEYPAD
-			const char* items[2] = {"Kernel Panic", "Other Test Item"};
+			const char* items[OS_DEBUGMENU_ITEM_COUNT] = {"Kernel Panic", "Other Test Item"};
 			
-			board_screen_text(2, "arcticOS Debug");
+			board_screen_text(1, "arcticOS Debug");
 			
-			for(int i = 0; i < 2; i++) {
-				if(i == os_debugmenu_item_selected) {
-					board_screen_invert_text();
-					board_screen_rect(0, 16 + (i * 8), board_screen_width, 8);
-					board_screen_text(1, items[i]);
-					board_screen_invert_text();
-				} else board_screen_text(1, items[i]);
+			for(int i = 0; i < OS_DEBUGMENU_ITEM_COUNT; i++) {
+				board_screen_text(1, items[i]);
 			}
 			
-			int refresh = 0;
+			os_debugmenu_refresh_selection();
 			
-			while(!refresh) { // Wait for user to do something
+			while(true) { // Wait for user to do something
 				for(int i = 0; i < BOARD_KEYPAD_KEY_COUNT; i++) {
 					if(board_keypad_pressed[i] > 10) {
 						if(os_debugmenu_wait_for_release[i] == 0) {
 							if(board_keypad_chars[i] == OS_NAV_UP_BUTTON) {
 								os_debugmenu_wait_for_release[i] = 1;
 								if(os_debugmenu_item_selected > 0) os_debugmenu_item_selected --;
-								refresh = 1;
+								os_debugmenu_refresh_selection();
 							}
 							
 							if(board_keypad_chars[i] == OS_NAV_DOWN_BUTTON) {
 								os_debugmenu_wait_for_release[i] = 1;
-								if(os_debugmenu_item_selected < 1) os_debugmenu_item_selected ++;
-								refresh = 1;
+								if(os_debugmenu_item_selected < OS_DEBUGMENU_ITEM_COUNT - 1) os_debugmenu_item_selected ++;
+								os_debugmenu_refresh_selection();
 							}
 							
 							if(board_keypad_chars[i] == OS_NAV_OK_BUTTON) {
@@ -178,7 +182,7 @@ void os_debugmenu() {
 								}
 								
 								// Only add this when we actually need it
-								//refresh = 1;
+								//os_debugmenu_refresh_selection();
 							}
 						}
 					} else {
@@ -186,9 +190,6 @@ void os_debugmenu() {
 					}
 				}
 			}
-			
-			board_screen_clear(0, 16, board_screen_width, 8*2);
-			board_screen_position(0, 0);
 		#endif
 	#endif
 }
