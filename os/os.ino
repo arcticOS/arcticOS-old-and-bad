@@ -240,7 +240,7 @@ void ui_seven_segment(int x, int y, char c) {
 	if(character[5] == '1') ui_seven_segment_vertical(x + 38, y + 38);
 }
 
-const char* ui_menu_time = "12:00";
+const char* ui_menu_time = "1200";
 const char* ui_menu_date = "17/01/21";
 
 const char* ui_dialer_number = "";
@@ -253,11 +253,11 @@ void loop() {
 		//board_screen_text(4, ui_menu_time);
 		//board_screen_text(2, ui_menu_date);
 		
-		ui_seven_segment(0, 0, ui_menu_time[0]);
-		ui_seven_segment(44, 0, ui_menu_time[1]);
-		ui_seven_segment(88, 0, ui_menu_time[3]);
-		ui_seven_segment(132, 0, ui_menu_time[4]);
+		ui_seven_segment(72, 20, ui_menu_time[0]);
+		ui_seven_segment(125, 20, ui_menu_time[1]);
 		
+		ui_seven_segment(72, 109, ui_menu_time[2]);
+		ui_seven_segment(125, 109, ui_menu_time[3]);
 		
 		int done = 0;
 		while(!done) {
