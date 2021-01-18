@@ -200,6 +200,46 @@ void ui_switch_screen(int screen) {
 	board_screen_color(1);
 }
 
+const char* ui_seven_segment_font[10] = {"1110111","0010010","1011101","1011011","0111010","1101011","1101111","1010010","1111111","1111011"};
+
+void ui_seven_segment_horizontal(int x, int y) {
+	board_screen_rect(x, y, 41, 3);
+	/*board_screen_rect(x + 2, y + 4, 35, 1);
+	
+	board_screen_rect(x + 1, y + 1, 36, 1);
+	board_screen_rect(x + 1, y + 3, 36, 1);
+	
+	board_screen_rect(x, y + 2, 37, 1);*/
+}
+
+void ui_seven_segment_vertical(int x, int y) {
+	board_screen_rect(x, y, 3, 41);
+	/*board_screen_rect(x + 4, y + 2, 1, 35);
+	
+	board_screen_rect(x + 1, y + 1, 1, 36);
+	board_screen_rect(x + 3, y + 1, 1, 36);
+	
+	board_screen_rect(x + 2, y + 2, 1, 37);*/
+}
+
+void ui_seven_segment(int x, int y, char c) {
+	if(c < '0' || c > '9') return; // We can only 7-segment numbers
+	const char* character = ui_seven_segment_font[c - '0'];
+	
+	// Do horizontal ones first
+	if(character[0] == '1') ui_seven_segment_horizontal(x, y);
+	if(character[3] == '1') ui_seven_segment_horizontal(x, y + 38);
+	if(character[6] == '1') ui_seven_segment_horizontal(x, y + 76);
+	
+	// Now vertical (left)
+	if(character[1] == '1') ui_seven_segment_vertical(x, y);
+	if(character[4] == '1') ui_seven_segment_vertical(x, y + 38);
+	
+	// Vertical right
+	if(character[2] == '1') ui_seven_segment_vertical(x + 38, y);
+	if(character[5] == '1') ui_seven_segment_vertical(x + 38, y + 38);
+}
+
 const char* ui_menu_time = "12:00";
 const char* ui_menu_date = "17/01/21";
 
@@ -210,8 +250,14 @@ void loop() {
 		// Here we just need to display the time, date, and the word "menu"
 		// Eventually I'd like to have a seven-segment time font.
 		
-		board_screen_text(4, ui_menu_time);
-		board_screen_text(2, ui_menu_date);
+		//board_screen_text(4, ui_menu_time);
+		//board_screen_text(2, ui_menu_date);
+		
+		ui_seven_segment(0, 0, ui_menu_time[0]);
+		ui_seven_segment(44, 0, ui_menu_time[1]);
+		ui_seven_segment(88, 0, ui_menu_time[3]);
+		ui_seven_segment(132, 0, ui_menu_time[4]);
+		
 		
 		int done = 0;
 		while(!done) {
