@@ -109,5 +109,9 @@ void loop(void) {
 		if(textColor) textColor = 0;
 		else textColor = 1;
 		Serial.println("R");
+	} else if(inString.charAt(0) == 'Q') { // Set text color
+		if(inString.charAt(0) == 'W') textColor = 0;
+		else textColor = 1;
+		Serial.println("R");
 	}
 }

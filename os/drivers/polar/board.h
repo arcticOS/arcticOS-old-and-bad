@@ -222,5 +222,13 @@
 		board_screen_print_value(x);
 		board_screen_print_value(x);
 		Serial1.print("\n");
+		Serial1.readStringUntil('\n');
+	}
+	
+	void board_screen_color(int color) {
+		Serial1.print("Q");
+		if(color) Serial1.println("B");
+		else Serial1.println("W");
+		Serial1.readStringUntil('\n');
 	}
 #endif

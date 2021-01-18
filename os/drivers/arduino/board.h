@@ -19,6 +19,9 @@
  * 
  * Arduino board definition
  * 
+ * This driver should be used as a skeleton - it has no drivers for
+ * screen or input, and so it will not compile unless you're planning
+ * to completely rewrite os.ino
  * 
  * TODO: 
  * 	- i2c

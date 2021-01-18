@@ -20,7 +20,20 @@
  * Main OS file
  * For the Arduino IDE
  * 
- * This is in the process of being completely rewritten to be smaller, faster, and more modular.
+ * Previously, I wanted the OS to be modular and portable, for use with 
+ * any sort of device. After thinking about it, I've decided that I want
+ * this to be made specifically for mobile devices - none of this "iT
+ * rUnS oN eVeRyThInG gUyS!!!1!!!oneone!!111!" BS. 
+ * 
+ * Don't get me wrong, I want people to use this in their own devices. 
+ * Whether they just pull the multitasking engine for use in some random
+ * other project, or actually run the OS on their phones. But so far,
+ * trying to make it an all-round OS is just making it messier and quite
+ * honestly, shittier.
+ * 
+ * So yeah, no more "do this but ONLY IF we have a screen" because any
+ * devices that run this OS should realistically have a screen. And a
+ * keypad.
  */
 
 /*
@@ -29,12 +42,6 @@
  
 #define KERNEL_TASK_COUNT 16
 #define KERNEL_ENABLE_WATCHDOG // Print a debug message if multitasking takes too long.
- 
-#define OS_NAV_UP_BUTTON '2'
-#define OS_NAV_DOWN_BUTTON '8'
-#define OS_NAV_LEFT_BUTTON '4'
-#define OS_NAV_RIGHT_BUTTON '6'
-#define OS_NAV_OK_BUTTON 'O'
  
 /*
  * DRIVERS AND LIBRARIES
@@ -69,16 +76,11 @@ void kernel_halt() {
 }
 
 void kernel_panic(int code) {
-	board_debug_print("Kernel PANIC!");
-	board_debug_print(code);
-	
-	#ifdef BOARD_HAS_SCREEN
-		board_screen_rect(0, 0, 8*6, 16);
-		board_screen_position(0, 0);
-		board_screen_text(1, "PANIC!");
-		board_screen_invert_text();
-		board_screen_text(1, "PANIC!");
-	#endif
+	board_screen_rect(0, 0, 8*6, 16);
+	board_screen_position(0, 0);
+	board_screen_text(1, "PANIC!");
+	board_screen_invert_text();
+	board_screen_text(1, "PANIC!");
 	kernel_halt();
 }
 
@@ -105,7 +107,7 @@ void kernel_multitask() {
 		kernel_in_preemption = 1;
 		
 		for(int i = 0; i < KERNEL_TASK_COUNT; i++) {
-			// TODO: Single-fire tasks, set task interval
+			// TODO: Single-fire tasks, set task interval, advanced watchdog
 			
 			if(kernel_tasks[i] != 0) {
 				kernel_tasks[i]->location();
@@ -129,69 +131,43 @@ void kernel_multitask() {
 /*
  * OS STUFF
  */
-
-#ifdef BOARD_HAS_KEYPAD
-	int os_debugmenu_wait_for_release[BOARD_KEYPAD_KEY_COUNT];
-#endif
-
-int os_debugmenu_item_selected = 0;
  
-#define OS_DEBUGMENU_ITEM_COUNT 2
- 
-void os_debugmenu_refresh_selection() {
-	#ifdef BOARD_HAS_SCREEN
-		board_screen_clear(board_screen_width - 4, 8, 4, board_screen_height - 8);
-		board_screen_rect(board_screen_width - 4, 8 + (os_debugmenu_item_selected * 8), 4, 8);
-	#endif
+// Wait until all keys released
+void os_wait_for_no_keys() {
+	while(1) {
+		int sum = 0;
+		for(int i = 0; i < BOARD_KEYPAD_KEY_COUNT; i++) {
+			sum += board_keypad_pressed[i];
+		}
+		
+		if(sum == 0) return;
+	}
 }
  
-void os_debugmenu() {
-	#ifdef BOARD_HAS_SCREEN
-		#ifdef BOARD_HAS_KEYPAD
-			const char* items[OS_DEBUGMENU_ITEM_COUNT] = {"Kernel Panic", "Other Test Item"};
-			
-			board_screen_text(1, "arcticOS Debug");
-			
-			for(int i = 0; i < OS_DEBUGMENU_ITEM_COUNT; i++) {
-				board_screen_text(1, items[i]);
+// Wait until a key is pressed and return the keycode
+char os_wait_for_key() {
+	char key = 0; // Returned key
+	
+	while(key == 0) {
+		for(int i = 0; i < BOARD_KEYPAD_KEY_COUNT; i++) {
+			if(board_keypad_pressed[i] == 10) {
+				os_wait_for_no_keys();
+				key = board_keypad_chars[i];
 			}
-			
-			os_debugmenu_refresh_selection();
-			
-			while(true) { // Wait for user to do something
-				for(int i = 0; i < BOARD_KEYPAD_KEY_COUNT; i++) {
-					if(board_keypad_pressed[i] > 10) {
-						if(os_debugmenu_wait_for_release[i] == 0) {
-							if(board_keypad_chars[i] == OS_NAV_UP_BUTTON) {
-								os_debugmenu_wait_for_release[i] = 1;
-								if(os_debugmenu_item_selected > 0) os_debugmenu_item_selected --;
-								os_debugmenu_refresh_selection();
-							}
-							
-							if(board_keypad_chars[i] == OS_NAV_DOWN_BUTTON) {
-								os_debugmenu_wait_for_release[i] = 1;
-								if(os_debugmenu_item_selected < OS_DEBUGMENU_ITEM_COUNT - 1) os_debugmenu_item_selected ++;
-								os_debugmenu_refresh_selection();
-							}
-							
-							if(board_keypad_chars[i] == OS_NAV_OK_BUTTON) {
-								os_debugmenu_wait_for_release[i] = 1;
-								
-								if(os_debugmenu_item_selected == 0) {
-									kernel_panic(0);
-								}
-								
-								// Only add this when we actually need it
-								//os_debugmenu_refresh_selection();
-							}
-						}
-					} else {
-						if(board_keypad_pressed[i] == 0 && os_debugmenu_wait_for_release[i] == 1) os_debugmenu_wait_for_release[i] = 0;
-					}
-				}
-			}
-		#endif
-	#endif
+		}
+	}
+	return key;
+}
+
+// Get key pressed
+char os_get_key() {
+	for(int i = 0; i < BOARD_KEYPAD_KEY_COUNT; i++) {
+		if(board_keypad_pressed[i] > 0) {
+			return board_keypad_chars[i];
+		}
+	}
+	
+	return 0; // No key
 }
  
 // This is where we initialise the board and the kernel.
@@ -199,30 +175,57 @@ void setup() {
 	board_init();
 
 	board_set_timed_irq(10, kernel_multitask);
+
+	board_screen_init();
+	board_screen_clear();
+	board_init_keypad();
 	
-	#ifdef BOARD_HAS_SCREEN
-		board_screen_init();
-		board_screen_clear();
-	#endif
-	
-	#ifdef BOARD_HAS_KEYPAD
-		board_init_keypad();
-		
-		kernel_add_task(board_keypad_refresh, 0);
-	#endif
+	kernel_add_task(board_keypad_refresh, 0);
+	board_debug_print("Keypad test:\n");
 }
 
+// UI here
+
+/*
+ * Screen IDs:
+ * 0 - clock
+ * 1 - dialer
+ * 2 - menu
+ */
+int ui_current_screen = 0;
+
+void ui_switch_screen(int screen) {
+	ui_current_screen = screen;
+	board_screen_clear();
+	board_screen_color(1);
+}
+
+const char* ui_menu_time = "12:00";
+const char* ui_menu_date = "17/01/21";
+
+const char* ui_dialer_number = "";
+
 void loop() {
-	os_debugmenu();
-	
-	/*#ifdef BOARD_HAS_KEYPAD
-		for(int i = 0; i < BOARD_KEYPAD_KEY_COUNT; i++) {
-			if(board_keypad_pressed[i] == 1) {
-				board_debug_print(board_keypad_chars[i]);
-				board_debug_print(",");
+	if(ui_current_screen == 0) {
+		// Here we just need to display the time, date, and the word "menu"
+		// Eventually I'd like to have a seven-segment time font.
+		
+		board_screen_text(4, ui_menu_time);
+		board_screen_text(2, ui_menu_date);
+		
+		int done = 0;
+		while(!done) {
+			char c = os_wait_for_key();
+			if(c >= '0' && c <= '9') {
+				// TODO: Send number pressed to dialer
+				ui_switch_screen(1);
+				done = 1;
 			}
 		}
 		
-		board_debug_print("\n");
-	#endif*/
+	} else if(ui_current_screen == 1) {
+		// Here we need to get and display a phone number, as well as offer back and call options
+	} else if(ui_current_screen == 2) {
+		// Here we need to show SMS, calculator, calendar, notes, and settings.
+	}
 }
