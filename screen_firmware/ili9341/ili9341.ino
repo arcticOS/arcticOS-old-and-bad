@@ -24,6 +24,11 @@
 #include "SPI.h"
 #include "Adafruit_GFX.h"
 #include "Adafruit_ILI9341.h"
+#include <Fonts/FreeSans18pt7b.h>
+#include <Fonts/FreeSans12pt7b.h>
+
+#define DISPLAYWIDTH 240
+#define DISPLAYHEIGHT 320
 
 #define TFT_DC 9
 #define TFT_CS 10
@@ -32,141 +37,140 @@
 #define TFT_MOSI 12
 #define TFT_CLK 13
 
-int screenChunks[8] = {255, 255, 255, 255, 255, 255, 255, 255}; // Set these all to 255 on boot so we clear everything
-int chunkWidth = 30;
-int chunkHeight = 40;
-
-int textLine = 0;
-
-// Adafruit's shitty library can't handle hardware SPI for some fucking reason so we have to stick w/ software
 Adafruit_ILI9341 tft = Adafruit_ILI9341(TFT_CS, TFT_DC, TFT_MOSI, TFT_CLK, TFT_RST, TFT_MISO);
 
-int textColor = 0;
+#define CHUNK_WIDTH 30
+#define CHUNK_HEIGHT 40
+int usedChunks[8] = {255, 255, 255, 255, 255, 255, 255, 255};
 
-void setRectUsed(int x, int y, int w, int h) {
-	int startBoxX = x / 30;
-	int endBoxX = ((x+w)/30)+1;
-	int startBoxY = y / 40;
-	int endBoxY = ((y+h)/30)+1;
-
-	for(int x = startBoxX; x < endBoxX; x++) {
-		for(int y = startBoxY; y < endBoxY; y++) {
-			screenChunks[y] = screenChunks[y] | (1 << x);
-		}
-	}
+int isChunkUsed(int x, int y) {
+	return usedChunks[y] & (1 << x) >> x;
 }
 
-void setRectUnused(int x, int y, int w, int h) {
-	int startBoxX = x / 30;
-	int endBoxX = ((w - x) / 30) + 1;
-	int startBoxY = y / 40;
-	int endBoxY = ((h - y) / 40) + 1;
-	for(int x = startBoxX; x < endBoxX; x++) {
-		for(int y = startBoxY; y < endBoxY; y++) {
-			screenChunks[y] = screenChunks[y] & ~(1 << x);
+void setChunkUsed(int x, int y, int used) {
+	if(used) usedChunks[y] = usedChunks[y] | (1 << x);
+	else usedChunks[y] = usedChunks[y] & ~(1 << x);
+}
+
+void setAreaUsed(int x, int y, int width, int height, int used) {
+	x = x / CHUNK_WIDTH;
+	y = y / CHUNK_HEIGHT;
+	
+	width = (width / CHUNK_WIDTH) + 1;
+	height = (height / CHUNK_HEIGHT) + 1;
+	
+	for(int i = y; i < y + height; i++) {
+		if(i > DISPLAYHEIGHT / CHUNK_HEIGHT) break;
+		
+		for(int i2 = x; i2 < x + width; i2++) {
+			if(i2 > DISPLAYWIDTH / CHUNK_WIDTH) break;
+			
+			setChunkUsed(i2, i, used);
 		}
 	}
 }
 
 void clearScreen() {
-	//tft.fillScreen(ILI9341_WHITE);
 	tft.setCursor(0, 0);
-	textLine = 0;
-
-	// Clear only the used areas to save time
+	tft.fillScreen(ILI9341_WHITE);
+	/*
+	 * This shit doesn't work
 	for(int y = 0; y < 8; y++) {
 		for(int x = 0; x < 8; x++) {
-			int clear = (screenChunks[y] & (1 << x)) >> x; // Get the Xth bit of our current row
-			if(clear) {
-				tft.fillRect(x * chunkWidth, y * chunkHeight, chunkWidth, chunkHeight, ILI9341_WHITE);
-			}
+			if(isChunkUsed(x, y))
+				tft.fillRect(x * CHUNK_WIDTH, y * CHUNK_HEIGHT, CHUNK_WIDTH, CHUNK_HEIGHT, ILI9341_WHITE);
+			setChunkUsed(x, y, 0);
 		}
-
-		screenChunks[y] = 0;
 	}
+	*/ 
 }
 
-void drawText(int textSize, String text) {
-	int startX = 0;
-	int startY = textLine;
-	int endX = 240;
-	int endY = (((8 * textSize) * text.length()) / 240) * (8 * textSize);
-	textLine = endY;
+#define ALIGN_NW 0
+#define ALIGN_N 1
+#define ALIGN_NE 2
+#define ALIGN_E 3
+#define ALIGN_SE 4
+#define ALIGN_S 5
+#define ALIGN_SW 6
+#define ALIGN_W 7
+#define ALIGN_C 8
 
-	setRectUsed(startX, startY, endX, endY);
-
-	tft.setTextSize(textSize);
-	if(textColor == 0) tft.setTextColor(ILI9341_BLACK);
-	else tft.setTextColor(ILI9341_WHITE);
-	tft.println(text);
-}
-
-void drawRectangle(int x, int y, int w, int h) {
-	tft.fillRect(x, y, w, h, ILI9341_BLACK);
-	setRectUsed(x, y, w, h);
-}
-
-void clearRectangle(int x, int y, int w, int h) {
-	tft.fillRect(x, y, w, h, ILI9341_WHITE);
-	//setRectUnused(x, y, w, h);
+void drawText(int x, int y, int size, int align, String text) {
+	if(size == 0) tft.setFont(&FreeSans12pt7b);
+	else if(size == 1) tft.setFont(&FreeSans18pt7b);
+	
+	int16_t dx, dy;
+	uint16_t width, height;
+	
+	tft.getTextBounds(text, 0, 0, &dx, &dy, &width, &height);
+	
+	switch(align) {
+		case(ALIGN_NW):
+			dx = x;
+			dy = y;
+			break;
+		case(ALIGN_N):
+			dx = x - (width / 2);
+			break;
+		case(ALIGN_NE):
+			dx = x - width;
+			break;
+		case(ALIGN_E):
+			dx = x - width;
+			dy = y - (height / 2);
+			break;
+		case(ALIGN_SE):
+			dx = x - width;
+			dy = y - height;
+			break;
+		case(ALIGN_S):
+			dx = x - (width / 2);
+			dy = y - height;
+			break;
+		case(ALIGN_SW):
+			dy = y - height;
+			break;
+		case(ALIGN_W):
+			dy = y - (height / 2);
+			break;
+		case(ALIGN_C):
+			dx = x - (width / 2);
+			dy = y - (height / 2);
+			break;
+	}
+	
+	//setAreaUsed(dx, dy, width, height, 1);
+	
+	tft.setCursor(dx, dy);
+	tft.setTextColor(ILI9341_BLACK);
+	tft.print(text);
 }
 
 void setup() {
 	Serial.begin(9600);
 	Serial.setTimeout(300000);
 	tft.begin();
-	//clearScreen();
-
+	tft.setTextColor(ILI9341_BLACK);
 	Serial.println("R");
 }
 
-
-void loop(void) {
-	String inString = Serial.readStringUntil('\n');
-	if(inString.charAt(0) == 'I') { // Info request
-		// Structure: I
-		Serial.println("W240H320V001");
-		Serial.println("R");
-	} else if(inString.charAt(0) == 'C') { // Clear Screen
-		// Structure: C
-		clearScreen();
-		Serial.println("R");
-	} else if(inString.charAt(0) == 'R') { // Rectangle
-		// Structure: R(3 characters representing an integer)(3 characters representing an integer)(3 characters representing an integer)(3 characters representing an integer)
-		int x = inString.substring(1, 4).toInt();
-		int y = inString.substring(4, 7).toInt();
-		int w = inString.substring(7, 10).toInt();
-		int h = inString.substring(10, 13).toInt();
-		drawRectangle(x, y, w, h);
-		Serial.println("R");
-	} else if(inString.charAt(0) == 'T') { // Text
-		// Structure: T(1 character representing text size from 1-4)(String)
-		int size = (int)inString.charAt(1) - 48;
-		String str = inString.substring(2);
-		drawText(size, str);
-		Serial.println("R");
-	} else if(inString.charAt(0) == 'P') { // Position
-		// Structure: P(3 characters representing an integer)(3 characters representing an integer)
-		int x = inString.substring(1, 4).toInt();
-		int y = inString.substring(4, 7).toInt();
-		tft.setCursor(x, y);
-		textLine = y;
-		Serial.println("R");
-	} else if(inString.charAt(0) == 'A') { // Clear area
-		// Structure: A(3 characters representing an integer)(3 characters representing an integer)(3 characters representing an integer)(3 characters representing an integer)
-		int x = inString.substring(1, 4).toInt();
-		int y = inString.substring(4, 7).toInt();
-		int w = inString.substring(7, 10).toInt();
-		int h = inString.substring(10, 13).toInt();
-		clearRectangle(x, y, w, h);
-		Serial.println("R");
-	} else if(inString.charAt(0) == 'V') { // Invert text color
-		if(textColor) textColor = 0;
-		else textColor = 1;
-		Serial.println("R");
-	} else if(inString.charAt(0) == 'Q') { // Set text color
-		if(inString.charAt(0) == 'W') textColor = 0;
-		else textColor = 1;
-		Serial.println("R");
+void loop() {
+	String command = Serial.readStringUntil('\n');
+	
+	switch(command.charAt(0)) {
+		case('C'):
+			clearScreen();
+			break;
+		case('T'):
+			int x = command.substring(1, 4).toInt();
+			int y = command.substring(4, 7).toInt() + 10;
+			int size = (int) command.charAt(7) - 48;
+			int align = (int) command.charAt(8) - 48;
+			String string = command.substring(9);
+			drawText(x, y, size, align, string);
+			break;
+		
 	}
+	
+	Serial.println("R");
 }
