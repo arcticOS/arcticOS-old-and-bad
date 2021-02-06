@@ -57,7 +57,6 @@
 				
 				break;
 			case(2):
-				board_screen_text(board_screen_width / 2, 50 + ui_overscan_y, 0, 1, ui_call_number.c_str());
 				ui_draw_navbar("Call", "Back", "Delete");
 				break;
 		}
@@ -84,17 +83,19 @@
 			
 			char c = os_wait_for_key();
 			
-			// TODO: Make this faster (custom redraw instead of whole screen)
-			
 			if(c == 'A') return; // Calling isn't implemented yet
-			if(c == 'O') ui_switch_screen(1);
-			if(c == 'E') return; // TODO { Backspace
+			if(c == 'O') {
+				ui_call_number = 0;
+				ui_switch_screen(1);
+			}
+			if(c == 'E') ui_call_number.remove(ui_call_number.length() - 1);
 			
-			if(c >= '0' && c <= '9') {
+			if(c >= '0' && c <= '9' && ui_call_number.length() < 15) { // Phone numbers usually shouldn't be more than 15 characters.
 				ui_call_number.concat(c);
 			}
 			
-			ui_do_redraw();
+			board_screen_rect(0, 50, board_screen_width, 50, 0);
+			board_screen_text(board_screen_width / 2, 50 + ui_overscan_y, 0, 1, ui_call_number.c_str());
 		}
 	}
 #endif

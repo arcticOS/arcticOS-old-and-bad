@@ -188,4 +188,14 @@
 		Serial1.readStringUntil('\n');
 		delay(BOARD_SCREEN_DELAY);
 	}
+	
+	void board_screen_rect(int x, int y, int width, int height, int color) {
+		Serial1.print("R");
+		board_screen_print_value(x);
+		board_screen_print_value(y);
+		board_screen_print_value(width);
+		board_screen_print_value(height);
+		Serial1.println(color);
+		delay(BOARD_SCREEN_DELAY);
+	}
 #endif
