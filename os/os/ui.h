@@ -54,7 +54,7 @@
 				
 				break;
 			case(2):
-				ui_draw_navbar("Call", "", "Back");
+				ui_draw_navbar("Call", "Back", "Delete");
 				break;
 		}
 	}
@@ -67,17 +67,31 @@
 		ui_do_redraw();
 	}
 	
+	// Variables for calling screen (ID 2)
+	String ui_call_number = "";
+	
 	void ui_do_loop() {
 		// Input handling code and redraw calls for all the screens go here
 		
-		switch(ui_current_screen) {
-			case(0):
-				ui_switch_screen(1);
-				break;
-			case(1):
-				char c = os_wait_for_key();
-				if(c == 'A')
-					ui_switch_screen(2);
+		if(ui_current_screen == 0) {
+			ui_switch_screen(1);
+		} else if(ui_current_screen == 1) {
+			char c = os_wait_for_key();
+			if(c == 'A')
+				ui_switch_screen(2);
+		} else if(ui_current_screen == 2) {
+			board_debug_print(ui_call_number.c_str());
+			board_debug_print("\n");
+			
+			char c = os_wait_for_key();
+			
+			if(c == 'A') return; // Calling isn't implemented yet
+			if(c == 'O') ui_switch_screen(1);
+			if(c == 'E') return; // TODO { Backspace
+			
+			if(c >= '0' && c <= '9') {
+				ui_call_number.concat(c);
+			}
 		}
 	}
 #endif

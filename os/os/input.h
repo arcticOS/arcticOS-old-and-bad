@@ -22,9 +22,9 @@
 
 #ifndef INPUT_H
 	#define INPUT_H
+	
 	// Wait until all keys released
 	void os_wait_for_no_keys() {
-	  board_debug_print("Waiting for no keys to be held...\n");
 		while(1) {
 			int sum = 0;
 			for(int i = 0; i < BOARD_KEYPAD_KEY_COUNT; i++) {
@@ -37,7 +37,6 @@
 
 	// Wait until a key is pressed and return the keycode
 	char os_wait_for_key() {
-		board_debug_print("Waiting for key...\n");
 		char key = 0; // Returned key
 
 		while(key == 0) {

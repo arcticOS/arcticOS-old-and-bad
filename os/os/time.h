@@ -25,6 +25,9 @@
  * - Returns the second, minute, hour, day, month, year
  * 
  * Note that it DOESN't handle stupid human things like timezones and DST.
+ * 
+ * TODO:
+ * - Add support for the stupid NA time thing (mm/dd/yyyy)
  */
 
 #ifndef TIME_H
