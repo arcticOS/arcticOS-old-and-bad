@@ -21,18 +21,18 @@
  * The Polar devkit is quite simple and is designed to be easy to assemble.
  * It consists of an Arduino Mega and a 3x5 button matrix with the following pin assignments:
  * 
- *      33  35  37
+ *      23  25  27
  *      --  --  --
  * 
- * 23|
- * 
- * 25|
- * 
- * 27|
- * 
- * 29|
+ * 39|
  * 
  * 31|
+ * 
+ * 33|
+ * 
+ * 35|
+ * 
+ * 37|
  * 
  * The Arduino Mega is connected via i2c to an Arduino Nano, which is itself connected to a display.
  * 
@@ -174,61 +174,13 @@
 		Serial1.print(value);
 	}
 	
-	void board_screen_rect(int x, int y, int w, int h) {
-		Serial1.print("R");
-		board_screen_print_value(x);
-		board_screen_print_value(y);
-		board_screen_print_value(w);
-		board_screen_print_value(h);
-		Serial1.print('\n');
-		Serial1.readStringUntil('\n');
-	}
-	
-	void board_screen_clear(int x, int y, int w, int h) {
-		Serial1.print("A");
-		board_screen_print_value(x);
-		board_screen_print_value(y);
-		board_screen_print_value(w);
-		board_screen_print_value(h);
-		Serial1.print('\n');
-		Serial1.readStringUntil('\n');
-	}
-	
-	void board_screen_text(int size, const char* data) {
-		if(size < 1) return;
-		if(size > 4) return;
+	void board_screen_text(int x, int y, int size, int align, const char* data) {
 		Serial1.print("T");
-		Serial1.print(size);
-		Serial1.println(data);
-		Serial1.readStringUntil('\n');
-	}
-	
-	void board_screen_text(int x, int y, int size, const char* data) {
-		Serial1.print("P");
 		board_screen_print_value(x);
 		board_screen_print_value(y);
-		Serial1.print("\n");
-		board_screen_text(size, data);
-		Serial1.readStringUntil('\n');
-	}
-	
-	void board_screen_invert_text() {
-		Serial1.println("V");
-		Serial1.readStringUntil('\n');
-	}
-	
-	void board_screen_position(int x, int y) {
-		Serial1.print("P");
-		board_screen_print_value(x);
-		board_screen_print_value(x);
-		Serial1.print("\n");
-		Serial1.readStringUntil('\n');
-	}
-	
-	void board_screen_color(int color) {
-		Serial1.print("Q");
-		if(color) Serial1.println("B");
-		else Serial1.println("W");
+		Serial1.print(size);
+		Serial1.print(align);
+		Serial1.println(data);
 		Serial1.readStringUntil('\n');
 	}
 #endif

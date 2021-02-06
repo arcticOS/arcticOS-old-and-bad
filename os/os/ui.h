@@ -23,43 +23,58 @@
 #ifndef UI_H
 	#define UI_H
 	
-	const char* ui_seven_segment_font[10] = {"1110111","0010010","1011101","1011011","0111010","1101011","1101111","1010010","1111111","1111011"};
-
-	void ui_seven_segment_horizontal(int x, int y) {
-		board_screen_rect(x, y, 41, 3);
-		/*board_screen_rect(x + 2, y + 4, 35, 1);
-
-		board_screen_rect(x + 1, y + 1, 36, 1);
-		board_screen_rect(x + 1, y + 3, 36, 1);
-
-		board_screen_rect(x, y + 2, 37, 1);*/
+	// This is fucking retarded. The screen overscans so bad that pixel 0 is 60 pixels above the top of the screen.
+	int ui_overscan_y = 15; 
+	
+	/*
+	 * 0 - No screen
+	 * 1 - Home screen
+	 * 2 - Dialer
+	 */
+	int ui_current_screen = 0;
+	
+	void ui_draw_navbar(const char* left, const char* middle, const char* right) {
+		board_screen_text(10, board_screen_height, 0, 6, left);
+		board_screen_text(120, board_screen_height, 0, 5, middle);
+		board_screen_text(230, board_screen_height, 0, 4, right);
 	}
-
-	void ui_seven_segment_vertical(int x, int y) {
-		board_screen_rect(x, y, 3, 41);
-		/*board_screen_rect(x + 4, y + 2, 1, 35);
-
-		board_screen_rect(x + 1, y + 1, 1, 36);
-		board_screen_rect(x + 3, y + 1, 1, 36);
-
-		board_screen_rect(x + 2, y + 2, 1, 37);*/
+	
+	void ui_do_redraw() {
+		// UI code for all the screens go here
+		
+		board_screen_clear();
+		
+		switch(ui_current_screen) {
+			case(1):
+				// Draw clock
+				board_screen_text(board_screen_width / 2, 50 + ui_overscan_y, 1, 1, "12:00 PM");
+				board_screen_text(board_screen_width / 2, 75 + ui_overscan_y, 0, 1, "Jan 1, 1970");
+				
+				ui_draw_navbar("Dial", "Menu", "");
+				
+				break;
+			case(2):
+				ui_draw_navbar("Call", "", "Back");
+				break;
+		}
 	}
-
-	void ui_seven_segment(int x, int y, char c) {
-		if(c < '0' || c > '9') return; // We can only 7-segment numbers
-		const char* character = ui_seven_segment_font[c - '0'];
-
-		// Do horizontal ones first
-		if(character[0] == '1') ui_seven_segment_horizontal(x, y);
-		if(character[3] == '1') ui_seven_segment_horizontal(x, y + 38);
-		if(character[6] == '1') ui_seven_segment_horizontal(x, y + 76);
-
-		// Now vertical (left)
-		if(character[1] == '1') ui_seven_segment_vertical(x, y);
-		if(character[4] == '1') ui_seven_segment_vertical(x, y + 38);
-
-		// Vertical right
-		if(character[2] == '1') ui_seven_segment_vertical(x + 38, y);
-		if(character[5] == '1') ui_seven_segment_vertical(x + 38, y + 38);
+	
+	void ui_switch_screen(int new_screen) {
+		ui_current_screen = new_screen;
+		ui_do_redraw();
+	}
+	
+	void ui_do_loop() {
+		// Input handling code and redraw calls for all the screens go here
+		
+		switch(ui_current_screen) {
+			case(0):
+				ui_switch_screen(1);
+				break;
+			case(1):
+				char c = os_wait_for_key();
+				if(c == "A")
+					ui_switch_screen(2);
+		}
 	}
 #endif

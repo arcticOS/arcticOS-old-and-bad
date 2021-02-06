@@ -76,11 +76,8 @@ void kernel_halt() {
 }
 
 void kernel_panic(int code) {
-	board_screen_rect(0, 0, 8*6, 16);
-	board_screen_position(0, 0);
-	board_screen_text(1, "PANIC!");
-	board_screen_invert_text();
-	board_screen_text(1, "PANIC!");
+	board_screen_clear();
+	board_screen_text(10, 10, 1, 0, "PANIC!");
 	kernel_halt();
 }
 
@@ -142,10 +139,14 @@ void setup() {
 	board_set_timed_irq(10, kernel_multitask);
 
 	board_screen_init();
-	board_screen_clear();
+	//board_screen_clear();
 	board_init_keypad();
 
 	kernel_add_task(board_keypad_refresh, 0);
+}
+
+void loop() {
+	ui_do_loop();
 }
 
 // UI here
@@ -155,7 +156,7 @@ void setup() {
  * 0 - clock
  * 1 - dialer
  * 2 - menu
- */
+ *
 int ui_current_screen = 0;
 
 void ui_switch_screen(int screen) {
@@ -165,7 +166,6 @@ void ui_switch_screen(int screen) {
 
 	ui_current_screen = screen;
 	board_screen_clear();
-	board_screen_color(1);
 }
 
 const char* ui_menu_time = "1200";
@@ -177,17 +177,8 @@ void loop() {
 	if(ui_current_screen == 0) {
 		// Here we just need to display the time, date, and the word "menu"
 		// Eventually I'd like to have a seven-segment time font.
-
-		//board_screen_text(4, ui_menu_time);
-		//board_screen_text(2, ui_menu_date);
-
-		ui_seven_segment(72, 20, ui_menu_time[0]);
-		ui_seven_segment(125, 20, ui_menu_time[1]);
-
-		ui_seven_segment(72, 109, ui_menu_time[2]);
-		ui_seven_segment(125, 109, ui_menu_time[3]);
-
-		board_screen_text(0, board_screen_height - 32, 1, "Menu");
+		
+		ui_draw_navbar("", "Menu", "");
 
 		int done = 0;
 		while(!done) {
@@ -202,8 +193,13 @@ void loop() {
 	} else if(ui_current_screen == 1) {
 		// Here we need to get and display a phone number, as well as offer back and call options
 
-    board_screen_text(0, board_screen_height - 16, 2, "Back");
+		ui_draw_navbar("Call", "", "Back");
+		int done = 0;
+		while(!done) {
+			
+		}
 	} else if(ui_current_screen == 2) {
 		// Here we need to show SMS, calculator, calendar, notes, and settings.
 	}
 }
+*/
