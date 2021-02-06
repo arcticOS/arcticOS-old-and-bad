@@ -47,8 +47,8 @@
 		switch(ui_current_screen) {
 			case(1):
 				// Draw clock
-				board_screen_text(board_screen_width / 2, 50 + ui_overscan_y, 1, 1, "12:00 PM");
-				board_screen_text(board_screen_width / 2, 75 + ui_overscan_y, 0, 1, "Jan 1, 1970");
+				board_screen_text(board_screen_width / 2, 50 + ui_overscan_y, 1, 1, time_get_time12_string().c_str());
+				board_screen_text(board_screen_width / 2, 75 + ui_overscan_y, 0, 1, time_get_date_string().c_str());
 				
 				ui_draw_navbar("Dial", "Menu", "");
 				
@@ -60,6 +60,9 @@
 	}
 	
 	void ui_switch_screen(int new_screen) {
+		board_debug_print("Switching to screen: ");
+		board_debug_print(new_screen);
+		board_debug_print("\n");
 		ui_current_screen = new_screen;
 		ui_do_redraw();
 	}
@@ -72,7 +75,7 @@
 				ui_switch_screen(1);
 				break;
 			case(1):
-				char c = os_wait_for_key();
+				char c = 'B';//os_wait_for_key();
 				if(c == "A")
 					ui_switch_screen(2);
 		}

@@ -48,9 +48,10 @@
  */
 
 #include "drivers/polar/board.h"
+#include "os/time.h"
 
 /*
- * KERNEL STUFF
+ * CORE STUFF
  */
 
 class KernelTask {
@@ -100,6 +101,9 @@ void kernel_remove_task(int position) {
 }
 
 void kernel_multitask() {
+	// Before we do ANYTHING that will take up extra time, tick the system clock.
+	time_tick();
+	
 	if(!kernel_in_preemption) {
 		kernel_in_preemption = 1;
 
