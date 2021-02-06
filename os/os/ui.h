@@ -60,9 +60,7 @@
 	}
 	
 	void ui_switch_screen(int new_screen) {
-		board_debug_print("Switching to screen: ");
-		board_debug_print(new_screen);
-		board_debug_print("\n");
+		debug_printf("Switching to screen %d.\n", new_screen);
 		ui_current_screen = new_screen;
 		ui_do_redraw();
 	}

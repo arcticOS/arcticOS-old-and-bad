@@ -49,6 +49,7 @@
 
 #include "drivers/polar/board.h"
 #include "os/time.h"
+#include "os/debug.h"
 
 /*
  * CORE STUFF
@@ -91,7 +92,7 @@ void kernel_add_task(void* location, int interval) {
 		}
 	}
 
-	board_debug_print("BUG: Failed to insert task\n");
+	debug_printf("BUG: Failed to insert task\n");
 	return;
 }
 
@@ -101,9 +102,6 @@ void kernel_remove_task(int position) {
 }
 
 void kernel_multitask() {
-	// Before we do ANYTHING that will take up extra time, tick the system clock.
-	time_tick();
-	
 	if(!kernel_in_preemption) {
 		kernel_in_preemption = 1;
 
@@ -118,7 +116,7 @@ void kernel_multitask() {
 	#ifdef KERNEL_ENABLE_WATCHDOG
 		else {
 			if(kernel_in_preemption > 10) {
-				board_debug_print("Watchdog BARK!\n");
+				debug_printf("Watchdog BARK!\n");
 			}
 
 			kernel_in_preemption ++;
@@ -127,6 +125,12 @@ void kernel_multitask() {
 
 	kernel_in_preemption = 0;
 	return;
+}
+
+// This is where all system tasks should go, in order of time-sensitivity.
+void kernel_tick() {
+	time_tick(); // This should always be first
+	kernel_multitask();
 }
 
 /*
@@ -140,10 +144,9 @@ void kernel_multitask() {
 void setup() {
 	board_init();
 
-	board_set_timed_irq(10, kernel_multitask);
+	board_set_timed_irq(10, kernel_tick);
 
 	board_screen_init();
-	//board_screen_clear();
 	board_init_keypad();
 
 	kernel_add_task(board_keypad_refresh, 0);
@@ -153,57 +156,3 @@ void loop() {
 	ui_do_loop();
 }
 
-// UI here
-
-/*
- * Screen IDs:
- * 0 - clock
- * 1 - dialer
- * 2 - menu
- *
-int ui_current_screen = 0;
-
-void ui_switch_screen(int screen) {
-  board_debug_print("Switching to screen ");
-  board_debug_print(screen);
-  board_debug_print("\n");
-
-	ui_current_screen = screen;
-	board_screen_clear();
-}
-
-const char* ui_menu_time = "1200";
-const char* ui_menu_date = "17/01/21";
-
-const char* ui_dialer_number = "";
-
-void loop() {
-	if(ui_current_screen == 0) {
-		// Here we just need to display the time, date, and the word "menu"
-		// Eventually I'd like to have a seven-segment time font.
-		
-		ui_draw_navbar("", "Menu", "");
-
-		int done = 0;
-		while(!done) {
-			char c = os_wait_for_key();
-			if(c >= '0' && c <= '9') {
-				// TODO: Send number pressed to dialer
-				ui_switch_screen(1);
-				done = 1;
-			}
-		}
-
-	} else if(ui_current_screen == 1) {
-		// Here we need to get and display a phone number, as well as offer back and call options
-
-		ui_draw_navbar("Call", "", "Back");
-		int done = 0;
-		while(!done) {
-			
-		}
-	} else if(ui_current_screen == 2) {
-		// Here we need to show SMS, calculator, calendar, notes, and settings.
-	}
-}
-*/

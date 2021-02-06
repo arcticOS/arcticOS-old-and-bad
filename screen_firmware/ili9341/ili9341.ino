@@ -142,10 +142,7 @@ void drawText(int x, int y, int size, int align, String text) {
 			break;
 	}
 	
-	Serial.println(dx);
-	Serial.println(dy);
-	
-	//setAreaUsed(dx, dy, width, height, 1);
+	setAreaUsed(dx, dy, width, height, 1);
 	
 	tft.setCursor(dx, dy);
 	tft.setTextColor(ILI9341_BLACK);
@@ -169,9 +166,7 @@ void loop() {
 			break;
 		case('T'):
 			int x = command.substring(1, 4).toInt();
-			Serial.println(x);
 			int y = command.substring(4, 7).toInt() + 10;
-			Serial.println(y);
 			int size = (int) command.charAt(7) - 48;
 			int align = (int) command.charAt(8) - 48;
 			String string = command.substring(9);
