@@ -44,6 +44,8 @@
 
 #ifndef BOARD
 	#define BOARD
+	
+	#define BOARD_SCREEN_DELAY 20
 
 	#define TIMER_INTERRUPT_DEBUG 0
 	#define USE_TIMER_1 false
@@ -153,6 +155,7 @@
 	
 	void board_screen_init() {
 		Serial1.begin(9600);
+		Serial1.setTimeout(10000);
 		String inString = Serial1.readStringUntil('\n'); // Wait for screen ready
 		
 		board_screen_width = inString.substring(1, 4).toInt();
@@ -166,6 +169,7 @@
 	void board_screen_clear() {
 		Serial1.println("C");
 		Serial1.readStringUntil('\n');
+		delay(BOARD_SCREEN_DELAY);
 	}
 	
 	void board_screen_print_value(int value) {
@@ -182,5 +186,6 @@
 		Serial1.print(align);
 		Serial1.println(data);
 		Serial1.readStringUntil('\n');
+		delay(BOARD_SCREEN_DELAY);
 	}
 #endif
