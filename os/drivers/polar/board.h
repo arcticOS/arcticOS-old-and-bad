@@ -21,7 +21,7 @@
  * The Polar devkit is quite simple and is designed to be easy to assemble.
  * It consists of an Arduino Mega and a 3x5 button matrix with the following pin assignments:
  * 
- *      23  25  27
+ *      27  25  23
  *      --  --  --
  * 
  * 29|
@@ -118,7 +118,7 @@
 	
 	char board_keypad_chars[BOARD_KEYPAD_KEY_COUNT] = {'A', 'O', 'E', '1', '2', '3', '4', '5', '6', '7', '8', '9', '*', '0', '#'};
 	
-	int board_keypad_pins_output[3] = {23, 25, 27};
+	int board_keypad_pins_output[3] = {27, 25, 23};
 	int board_keypad_pins_input[5] = {29, 31, 33, 35, 37};
 	
 	void board_init_keypad() {

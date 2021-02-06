@@ -76,6 +76,7 @@
 				break;
 			case(1):
 				char c = os_wait_for_key();
+				board_debug_print(c);
 				if(c == "A")
 					ui_switch_screen(2);
 		}
