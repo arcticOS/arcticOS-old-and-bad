@@ -80,6 +80,8 @@ void kernel_halt() {
 void kernel_panic(int code) {
 	board_screen_clear();
 	board_screen_text(10, 10, 1, 0, "PANIC!");
+	debug_printf("Kernel PANIC with code %d\n", code);
+	debug_printf("Preemption Status: %d\n", kernel_in_preemption);
 	kernel_halt();
 }
 

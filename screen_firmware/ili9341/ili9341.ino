@@ -44,7 +44,9 @@ Adafruit_ILI9341 tft = Adafruit_ILI9341(TFT_CS, TFT_DC, TFT_MOSI, TFT_CLK, TFT_R
 int usedChunks[8] = {255, 255, 255, 255, 255, 255, 255, 255};
 
 int isChunkUsed(int x, int y) {
-	return usedChunks[y] & (1 << x) >> x;
+	int mask = (1 << x);
+	int used = usedChunks[y] & mask;
+	return used;
 }
 
 void setChunkUsed(int x, int y, int used) {
@@ -53,11 +55,16 @@ void setChunkUsed(int x, int y, int used) {
 }
 
 void setAreaUsed(int x, int y, int width, int height, int used) {
-	x = x / CHUNK_WIDTH;
-	y = y / CHUNK_HEIGHT;
+	x = (x / CHUNK_WIDTH) - 1;
+	y = (y / CHUNK_HEIGHT) - 1;
 	
-	width = (width / CHUNK_WIDTH) + 1;
-	height = (height / CHUNK_HEIGHT) + 1;
+	width = (width / CHUNK_WIDTH) + 3;
+	height = (height / CHUNK_HEIGHT) + 4;
+	
+	if(x < 0) x = 0;
+	if(y < 0) y = 0;
+	if(x + width > 8) width = 8 - x;
+	if(y + height > 8) height = 8 - y;
 	
 	for(int i = y; i < y + height; i++) {
 		if(i > DISPLAYHEIGHT / CHUNK_HEIGHT) break;
@@ -72,17 +79,15 @@ void setAreaUsed(int x, int y, int width, int height, int used) {
 
 void clearScreen() {
 	tft.setCursor(0, 0);
-	tft.fillScreen(ILI9341_WHITE);
-	/*
-	 * This shit doesn't work
+	
 	for(int y = 0; y < 8; y++) {
 		for(int x = 0; x < 8; x++) {
-			if(isChunkUsed(x, y))
+			if(isChunkUsed(x, y)) {
 				tft.fillRect(x * CHUNK_WIDTH, y * CHUNK_HEIGHT, CHUNK_WIDTH, CHUNK_HEIGHT, ILI9341_WHITE);
-			setChunkUsed(x, y, 0);
+				setChunkUsed(x, y, 0);
+			}
 		}
-	}
-	*/ 
+	} 
 }
 
 #define ALIGN_NW 0
@@ -161,6 +166,10 @@ void loop() {
 	String command = Serial.readStringUntil('\n');
 	
 	switch(command.charAt(0)) {
+		case('W'):
+			return DISPLAYWIDTH;
+		case('H'):
+			return DISPLAYHEIGHT;
 		case('C'):
 			clearScreen();
 			break;
