@@ -24,7 +24,7 @@
  *      23  25  27
  *      --  --  --
  * 
- * 39|
+ * 29|
  * 
  * 31|
  * 
@@ -118,8 +118,8 @@
 	
 	char board_keypad_chars[BOARD_KEYPAD_KEY_COUNT] = {'A', 'O', 'E', '1', '2', '3', '4', '5', '6', '7', '8', '9', '*', '0', '#'};
 	
-	int board_keypad_pins_output[3] = {33, 35, 37};
-	int board_keypad_pins_input[5] = {23, 25, 27, 29, 31};
+	int board_keypad_pins_output[3] = {23, 25, 27};
+	int board_keypad_pins_input[5] = {29, 31, 33, 35, 37};
 	
 	void board_init_keypad() {
 		for(int i = 0; i < 3; i ++) {

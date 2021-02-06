@@ -37,7 +37,7 @@
 
 	// Wait until a key is pressed and return the keycode
 	char os_wait_for_key() {
-	  board_debug_print("Waiting for key...\n");
+		board_debug_print("Waiting for key...\n");
 		char key = 0; // Returned key
 
 		while(key == 0) {
