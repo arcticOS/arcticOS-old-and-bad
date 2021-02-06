@@ -84,6 +84,8 @@
 			
 			char c = os_wait_for_key();
 			
+			// TODO: Make this faster (custom redraw instead of whole screen)
+			
 			if(c == 'A') return; // Calling isn't implemented yet
 			if(c == 'O') ui_switch_screen(1);
 			if(c == 'E') return; // TODO { Backspace

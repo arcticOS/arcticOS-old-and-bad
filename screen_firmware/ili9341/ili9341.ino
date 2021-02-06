@@ -165,25 +165,30 @@ void setup() {
 void loop() {
 	String command = Serial.readStringUntil('\n');
 	
-	switch(command.charAt(0)) {
-		case('W'):
-			return DISPLAYWIDTH;
-		case('H'):
-			return DISPLAYHEIGHT;
-		case('C'):
-			clearScreen();
-			break;
-		case('T'):
-			int x = command.substring(1, 4).toInt();
-			int y = command.substring(4, 7).toInt() + 10;
-			int size = (int) command.charAt(7) - 48;
-			int align = (int) command.charAt(8) - 48;
-			String string = command.substring(9);
-			drawText(x, y, size, align, string);
-			break;
+	if(command.charAt(0) == 'W') {
+		Serial.println(DISPLAYWIDTH);
+	} else if(command.charAt(0) == 'H') {
+		Serial.println(DISPLAYHEIGHT);
+	} else if(command.charAt(0) == 'C') {
+		clearScreen();
+	} else if(command.charAt(0) == 'T') {
+		int x = command.substring(1, 4).toInt();
+		int y = command.substring(4, 7).toInt() + 10;
+		int size = (int) command.charAt(7) - 48;
+		int align = (int) command.charAt(8) - 48;
+		String string = command.substring(9);
+		drawText(x, y, size, align, string);
+	} else if(command.charAt(0) == 'R') {
+		int x = command.substring(1, 4).toInt();
+		int y = command.substring(4, 7).toInt();
+		int w = command.substring(7, 10).toInt();
+		int h = command.substring(10, 13).toInt();
+		int color = (int) command.charAt(13) - 48;
+		setAreaUsed(x, y, w, h, 1);
 		
+		if(color == 1) tft.fillRect(x, y, w, h, ILI9341_BLACK);
+		else tft.fillRect(x, y, w, h, ILI9341_WHITE);
 	}
-	
 	Serial.println(command);
 	//Serial.println("R");
 }
