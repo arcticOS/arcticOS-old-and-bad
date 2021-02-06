@@ -39,6 +39,9 @@
 		board_screen_text(230, board_screen_height, 0, 4, right);
 	}
 	
+	// Variables for calling screen (ID 2)
+	String ui_call_number = "";
+	
 	void ui_do_redraw() {
 		// UI code for all the screens go here
 		
@@ -54,6 +57,7 @@
 				
 				break;
 			case(2):
+				board_screen_text(board_screen_width / 2, 50 + ui_overscan_y, 0, 1, ui_call_number.c_str());
 				ui_draw_navbar("Call", "Back", "Delete");
 				break;
 		}
@@ -64,9 +68,6 @@
 		ui_current_screen = new_screen;
 		ui_do_redraw();
 	}
-	
-	// Variables for calling screen (ID 2)
-	String ui_call_number = "";
 	
 	void ui_do_loop() {
 		// Input handling code and redraw calls for all the screens go here
@@ -90,6 +91,8 @@
 			if(c >= '0' && c <= '9') {
 				ui_call_number.concat(c);
 			}
+			
+			ui_do_redraw();
 		}
 	}
 #endif
