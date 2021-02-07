@@ -85,17 +85,20 @@
 			
 			if(c == 'A') return; // Calling isn't implemented yet
 			if(c == 'O') {
-				ui_call_number = 0;
+				ui_call_number = "";
 				ui_switch_screen(1);
 			}
-			if(c == 'E') ui_call_number.remove(ui_call_number.length() - 1);
+			if(c == 'E') {
+				ui_call_number.remove(ui_call_number.length() - 1);
+				board_screen_rect(0, 50, board_screen_width, 50, 0);
+				board_screen_text(board_screen_width / 2, 50 + ui_overscan_y, 0, 1, ui_call_number.c_str());
+			}
 			
 			if(c >= '0' && c <= '9' && ui_call_number.length() < 15) { // Phone numbers usually shouldn't be more than 15 characters.
 				ui_call_number.concat(c);
+				board_screen_rect(0, 50, board_screen_width, 50, 0);
+				board_screen_text(board_screen_width / 2, 50 + ui_overscan_y, 0, 1, ui_call_number.c_str());
 			}
-			
-			board_screen_rect(0, 50, board_screen_width, 50, 0);
-			board_screen_text(board_screen_width / 2, 50 + ui_overscan_y, 0, 1, ui_call_number.c_str());
 		}
 	}
 #endif
