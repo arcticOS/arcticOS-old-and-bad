@@ -101,4 +101,17 @@
 			}
 		}
 	}
+
+	void ui_do_timed_refresh() {
+			if(ui_current_screen == 1) {
+				if(time_get_second() == 0) {
+					// Clear clock area
+					board_screen_rect(0, 45 + ui_overscan_y, board_screen_width, 100, 0);
+					
+					// Draw clock
+					board_screen_text(board_screen_width / 2, 50 + ui_overscan_y, 1, 1, time_get_time12_string().c_str());
+					board_screen_text(board_screen_width / 2, 75 + ui_overscan_y, 0, 1, time_get_date_string().c_str());
+				}
+			}
+	}
 #endif

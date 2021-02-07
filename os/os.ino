@@ -152,6 +152,7 @@ void setup() {
 	board_init_keypad();
 
 	kernel_add_task(board_keypad_refresh, 0);
+	kernel_add_task(ui_do_timed_refresh, 0);
 }
 
 void loop() {
