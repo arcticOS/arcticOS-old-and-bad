@@ -18,9 +18,20 @@
  * MA 02110-1301, USA.
  */
 
+#include <cpu/cpu.h>
+
+// If we decide to move to a fully multitasked system in the future, we'll need
+// to add more things to this.
+typedef struct {
+    void* stack_pointer;
+} OS_TASK;
+
+OS_TASK OS_tasks[2];
+int OS_current_task;
+
+void OS_init_multitasking();
 void OS_master_timed_irq();
 
-// TODO: Below
-// void OS_save_task_state();
-// void OS_load_task_state();
-// void OS_switch_to_task(int task);
+OS_TASK OS_create_new_task(void* function, void* stack_pointer);
+
+void OS_do_context_switch();

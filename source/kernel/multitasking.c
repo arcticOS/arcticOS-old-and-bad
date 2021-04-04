@@ -18,6 +18,40 @@
  * MA 02110-1301, USA.
  */
 
+#include <stdint.h>
+#include <kernel/multitasking.h>
+
+static uint8_t OS_main_task_stack[OS_TASK_STACK_SIZE];
+static uint8_t OS_sys_task_stack[OS_TASK_STACK_SIZE];
+
+static void OS_main_task() {
+
+}
+
+static void OS_sys_task() {
+
+}
+
+OS_TASK OS_create_new_task(void* function, void* stack_pointer) {
+    uint8_t* stack = &stack_pointer[OS_TASK_STACK_SIZE - 1];
+    stack[0] = (uint16_t) function & 0xFF;
+    stack[-1] = (uint16_t) function >> 8;
+    for(int i = -2; i > -34; i--) {
+        stack[i] = 0;
+    }
+    stack[-34] = 0x80;
+
+    OS_TASK new_task;
+    new_task.stack_pointer = stack - 35;
+    return new_task;
+}
+
+void OS_init_multitasking() {
+    OS_current_task = 0;
+    OS_tasks[0] = OS_create_new_task(&OS_main_task, &OS_main_task_stack);
+    OS_tasks[1] = OS_create_new_task(&OS_sys_task, &OS_sys_task_stack);
+}
+
 void OS_master_timed_irq() {
     /*
      * An important question to ask is whether or not a "real" multitasking system is
@@ -30,4 +64,5 @@ void OS_master_timed_irq() {
      * this can be easily tweaked to become a full multitasking system later since we'll still
      * need context switching.
      */
+    OS_do_context_switch();
 }

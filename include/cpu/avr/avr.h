@@ -22,6 +22,8 @@
 
 #include <avr/io.h>
 #include <avr/interrupt.h>
+
+#define OS_TASK_STACK_SIZE 64
 // TODO: Finish SPI (http://www.avrbeginners.net/architecture/spi/spi.html | https://avrgeeks.com/spi-of-avr/ | www.tinkerer.eu/AVRLib/SPI/)
 // TODO: Pin I/O
 // TODO: Serial I/O (https://appelsiini.net/2011/simple-usart-with-avr-libc/)

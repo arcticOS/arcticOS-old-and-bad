@@ -18,11 +18,6 @@
  * MA 02110-1301, USA.
  */
 
-#ifdef __AVR__
-    #define AVR_HAS_EXTERNAL_CLOCK 1
-    #include <cpu/avr/avr.h>
-#endif
-
 #include <cpu/cpu.h>
 #include <cpu/timed_irq.h>
 
