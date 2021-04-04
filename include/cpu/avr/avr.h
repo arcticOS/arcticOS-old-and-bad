@@ -24,7 +24,12 @@
 #include <avr/interrupt.h>
 
 #define OS_TASK_STACK_SIZE 64
+
+#define CPU_HAS_SECURE_SALT_STORAGE
+
+#define AVR_HAS_EXTERNAL_CLOCK
 // TODO: Finish SPI (http://www.avrbeginners.net/architecture/spi/spi.html | https://avrgeeks.com/spi-of-avr/ | www.tinkerer.eu/AVRLib/SPI/)
 // TODO: Pin I/O
 // TODO: Serial I/O (https://appelsiini.net/2011/simple-usart-with-avr-libc/)
 // TODO: I2C
+// TODO: EEPROM (https://www.exploreembedded.com/wiki/Permanent_Data_Storage_with_AVR_Internal_EEPROM)

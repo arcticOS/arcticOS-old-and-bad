@@ -21,8 +21,11 @@
  * very secure and should be changed before release.
  */
 
+char OS_encryption_salt[8];
+
 // Encrypt/decrypt functions
 void OS_do_xor_crypt(char* string, const char* key, int length);
+void OS_generate_encryption_salt();
 
 // Hashing functions
 uint8_t OS_get_hash(const char* data, int length);

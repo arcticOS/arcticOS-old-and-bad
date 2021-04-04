@@ -19,7 +19,6 @@
  */
 
 #ifdef __AVR__
-    #define AVR_HAS_EXTERNAL_CLOCK 1
     #include <cpu/avr/avr.h>
 #endif
 

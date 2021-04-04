@@ -23,6 +23,10 @@
 
 // TODO: Make this not overwrite the existing string, but return a new one.
 #include <stdint.h>
+#include <stdlib.h>
+#include <string.h>
+
+#include <math/crypto.h>
 
 void OS_do_xor_crypt(char* string, const char* key, int length) {
     int key_index = 0;
@@ -36,6 +40,15 @@ void OS_do_xor_crypt(char* string, const char* key, int length) {
 
         key_index ++;
         if(key[key_index] == 0) key_index = 0;
+    }
+}
+
+// TODO: Find more secure way of seeding this
+// TODO: Have a more secure way of generating random numbers
+void OS_generate_new_encryption_salt(const char* seed) {
+    srand((int) OS_get_hash(seed, strlen(seed)));
+    for(int i = 0; i < 8; i++) {
+        OS_encryption_salt[i] = rand();
     }
 }
 
