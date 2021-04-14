@@ -33,7 +33,5 @@ int main(void) {
     OS_register_master_timed_irq(&OS_master_timed_irq);
 
     // OS loop
-    for(;;) {
-
-    }
+    for(;;) {}
 }
