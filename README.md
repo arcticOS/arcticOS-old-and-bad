@@ -15,3 +15,5 @@ arcticOS is an operating system designed to run on dumbphones and other low-powe
     - Notes
     - Contacts
 - System for easily writing other applications
+- Better cryptography
+- Encrypted storage
