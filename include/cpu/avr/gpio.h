@@ -1,5 +1,5 @@
 /*
- * arcticOS Version 0.2-alpha
+ * arcticOS
  * Copyright (c) 2021 Johnny Stene <jhonnystene@protonmail.com>
  *
  * This program is free software; you can redistribute it and/or modify
@@ -18,26 +18,10 @@
  * MA 02110-1301, USA.
  */
 
-#include <cpu/cpu.h>
-#include <cpu/timed_irq.h>
+void AVR_set_pin_as_output(int port, int pin);
+void AVR_set_pin_as_input(int port, int pin);
 
-#include <kernel/crash.h>
-#include <kernel/multitasking.h>
+void AVR_set_pin_low(int port, int pin);
+void AVR_set_pin_high(int port, int pin);
 
-#include <math/crypto.h>
-
-#include <fs/mat.h>
-
-#include <input/keypad.h>
-
-int main(void) {
-    OS_init_cpu();
-    OS_init_keypad();
-
-    // ***** IMPORTANT *****
-    // ALL initialization tasks should be done above!
-    OS_register_master_timed_irq(&OS_master_timed_irq);
-
-    // Enter an endless loop
-    for(;;) {}
-}
+int AVR_read_pin(int port, int pin);

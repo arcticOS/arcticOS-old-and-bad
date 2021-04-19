@@ -1,0 +1,2 @@
+This contains the needed files for handling keypad input on the kickstarter demo unit.
+The kickstarter demo unit uses the expansion pins on the motherboard to connect to the keypad and the programming interface, due to the trimmed motherboard.

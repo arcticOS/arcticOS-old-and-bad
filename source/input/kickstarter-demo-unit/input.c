@@ -1,5 +1,5 @@
 /*
- * arcticOS Version 0.2-alpha
+ * arcticOS
  * Copyright (c) 2021 Johnny Stene <jhonnystene@protonmail.com>
  *
  * This program is free software; you can redistribute it and/or modify
@@ -18,26 +18,18 @@
  * MA 02110-1301, USA.
  */
 
-#include <cpu/cpu.h>
-#include <cpu/timed_irq.h>
-
-#include <kernel/crash.h>
-#include <kernel/multitasking.h>
-
-#include <math/crypto.h>
-
-#include <fs/mat.h>
+#ifdef __AVR__
 
 #include <input/keypad.h>
+#include <cpu/avr/gpio.h>
 
-int main(void) {
-    OS_init_cpu();
-    OS_init_keypad();
-
-    // ***** IMPORTANT *****
-    // ALL initialization tasks should be done above!
-    OS_register_master_timed_irq(&OS_master_timed_irq);
-
-    // Enter an endless loop
-    for(;;) {}
+void OS_init_keypad() {
+    
 }
+
+char OS_get_key_pressed() {
+    // TODO: This
+    return 0;
+}
+
+#endif
