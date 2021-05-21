@@ -1,5 +1,5 @@
 /*
- * arcticOS Version 0.3-alpha
+ * arcticOS
  * Copyright (c) 2021 Johnny Stene <jhonnystene@protonmail.com>
  *
  * This program is free software; you can redistribute it and/or modify
