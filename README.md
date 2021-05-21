@@ -1,19 +1,16 @@
 ## About
-arcticOS is an operating system designed to run on dumbphones and other low-power devices. It is currently being rewritten from scratch, moving from C++ with the Arduino library and a header-only layout to C, with a more standard layout and no Arduino library.
+arcticOS is an open-source, Linux-based mobile operating system designed for feature phones with E-ink displays.
 
-## Current Features
-- AVR support
-- Basic multitasking
-- Basic cryptography
+## Features
+- Emulator
 
 ## Planned Features
-- Emulator
-- Cellular Support
-- Clean, minimalist UI
-- Basic applications
-    - Calendar
-    - Notes
-    - Contacts
-- System for easily writing other applications
-- Better cryptography
-- Encrypted storage
+- Calls and SMS with the SIM7600* series of modems.
+- IRC and Matrix messages
+- Music Player
+- Calendar
+- Calculator
+- Notes
+- Clock with alarms
+- E-mail client
+- OTA updates

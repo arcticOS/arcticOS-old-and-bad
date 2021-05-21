@@ -1,0 +1,5 @@
+{
+    "friendlyName": "Test App 1",
+    "icon": "none",
+    "launchCommand": "ls"
+}
