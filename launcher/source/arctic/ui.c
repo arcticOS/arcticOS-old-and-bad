@@ -18,7 +18,7 @@
  * MA 02110-1301, USA.
  */
 
- #include <arctic/display.h>
+ #include <arctic/ui.h>
 
  #ifdef EMULATOR
     // All functions if they're used in the emu
@@ -85,13 +85,20 @@
         SDL_FreeSurface(text_surface);
     }
 
-    void arctic_display_emulator_loop() {
-        while(1) {
+    char arctic_wait_for_input() {
+        for(;;) {
             SDL_PollEvent(&EMULATOR_EVENT);
 
             switch(EMULATOR_EVENT.type) {
                 case SDL_QUIT:
                     exit(0);
+                    break;
+                case SDL_KEYDOWN:
+                    if(EMULATOR_EVENT.key.repeat == 0) {
+                        const char* retstr = SDL_GetKeyName(EMULATOR_EVENT.key.keysym.sym);
+                        if(retstr[0] == '\0') break;
+                        return retstr[0];
+                    }
                     break;
             }
         }

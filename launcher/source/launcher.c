@@ -20,7 +20,7 @@
 
 #include <stdio.h>
 
-#include <arctic/display.h>
+#include <arctic/ui.h>
 #include <arctic/apps.h>
 
 int main(int argc, char* argv[]) {
@@ -40,7 +40,5 @@ int main(int argc, char* argv[]) {
 
     arctic_display_refresh();
 
-    #ifdef EMULATOR
-        arctic_display_emulator_loop();
-    #endif
+    printf("%c\n", arctic_wait_for_input());
 }

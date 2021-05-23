@@ -13,4 +13,4 @@ arcticOS is an open-source, Linux-based mobile operating system designed for fea
 - Notes
 - Clock with alarms
 - E-mail client
-- OTA updates
+- OTA updates?

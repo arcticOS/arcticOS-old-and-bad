@@ -18,10 +18,10 @@
  * MA 02110-1301, USA.
  */
 
+// DISPLAY FUNCTIONS
 void arctic_display_init();
 void arctic_display_refresh();
 void arctic_display_draw_text(int font, int x, int y, const char* text);
 
-#ifdef EMULATOR
-    void arctic_display_emulator_loop();
-#endif
+// INPUT FUNCTIONS
+char arctic_wait_for_input();
