@@ -2,3 +2,5 @@
 build/*.bin
 *.o
 *.hex
+
+*/__pycache__/*
