@@ -530,3 +530,12 @@ class Display(DisplayDriver):
     def drawAppHeader(self, appName):
         self.drawText(appName, 25, 10, 10)
         self.drawLine(10, 30, self.width - 10, 30)
+    
+    def drawButton(self, text, x, y, width, height, selected=False, pushed=False):
+        self.drawRect(x, y, width, height)
+        self.drawRect(x + 1, y + 1, width - 2, height - 2)
+        
+        if(selected):
+            self.drawRect(x + 2, y + 2, width - 4, height - 4)
+
+        self.drawTextCentered(text, 20, x + (width / 2), y + (height / 2))

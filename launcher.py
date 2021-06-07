@@ -50,6 +50,7 @@ if(__name__ == "__main__"):
         PhoneDisplay.drawAppHeader("Launcher")
         PhoneDisplay.drawRect(40, 40, 40, 40)
         PhoneDisplay.fillRect(100, 40, 40, 40)
+        PhoneDisplay.drawButton("Button!", 40, 85, 60, 30)
         PhoneDisplay.refresh()
 
         # Input handling goes here
