@@ -1,6 +1,9 @@
 ## About arcticOS
 arcticOS is an in-development mobile operating system designed to be used on E-ink feature phones. It features a user interface written in Python, as well as an emulator and support for development units made with a Raspberry Pi.
 
+### Target Hardware
+arcticOS is designed to be used on a QWERTY-style phone with an AllWinner A13 CPU, 64 MB of RAM, and an SD card for storage.
+
 ## Features
 ### Portability
 arcticOS can be easily ported to different devices and displays. If you can use it with Python, you can run the arcticOS frontend on it.
