@@ -29,8 +29,9 @@ global BuildInfo, UserSettings
 BuildInfo = PreferenceStorage.PreferenceStorage("settings/build.json")
 UserSettings = PreferenceStorage.PreferenceStorage("settings/user.json")
 
-global PhoneDisplay
+global PhoneDisplay, KeyInput
 PhoneDisplay = HID.Display()
+KeyInput = HID.KeyInput()
 
 if(__name__ == "__main__"):
     # Launch OOBE if needed
@@ -42,12 +43,19 @@ if(__name__ == "__main__"):
     for app in App.getAllApps("apps"):
         print(app.name + " + " + app.fileName)
 
+    PhoneDisplay.refresh()
+
     while True:
-        PhoneDisplay.refresh()
-
-        # Input handling goes here
-
         PhoneDisplay.drawText("Hello, World!", 25, 10, 10)
         PhoneDisplay.drawLine(10, 30, BuildInfo.getKey("screen_width") - 10, 30)
         PhoneDisplay.drawRect(40, 40, 40, 40)
         PhoneDisplay.fillRect(100, 40, 40, 40)
+        PhoneDisplay.refresh()
+
+        # Input handling goes here
+        while True:
+            key = KeyInput.getKey()
+
+            if(key == "ok"):
+                break
+

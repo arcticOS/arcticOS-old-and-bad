@@ -399,6 +399,10 @@ if os.path.exists('/sys/bus/platform/drivers/gpiomem-bcm2835'): # Check if we're
 
         def drawLine(self, x1, y1, x2, y2):
             self.draw.line([x1, y1, x2, y2], fill=0x00)
+    
+    class KeyInput:
+        def __init__(self):
+            pass
 
 else:
     import pygame
@@ -448,4 +452,59 @@ else:
         def drawLine(self, x1, y1, x2, y2):
             pygame.draw.line(self.display, self.color_black, (x1, y1), (x2, y2))
 
-        
+    class KeyInput:
+        def __init__(self):
+            self.inputBuffer = []
+
+        def getKey(self):
+            if(len(self.inputBuffer) > 0):
+                input_char = self.inputBuffer[0]
+                self.inputBuffer = self.inputBuffer[1:]
+                return input_char
+            while True:
+                input_string = input("KEY INPUT: ")
+                if(input_string.startswith("help")):
+                    print("string:<String of text> - Enter a string of text")
+                    print("volup - Volume Up")
+                    print("voldown - Volume Down")
+                    print("light - Frontlight/Flashlight Button")
+                    print("navup - Navigation Pad Up")
+                    print("navdown - Navigation Pad Down")
+                    print("navleft - Navigation Pad Left")
+                    print("navright - Navigation Pad Right")
+                    print("navok - Navigation Pad OK")
+                    print("end - End Call")
+                    print("leftutil - Left Utility Button")
+                    print("rightutil - Right Utility Button")
+                    print("answer - Answer Call")
+                elif(input_string.startswith("string:")):
+                    for character in input_string[7:]:
+                        self.inputBuffer.append(character)
+                    input_char = self.inputBuffer[0]
+                    self.inputBuffer = self.inputBuffer[1:]
+                    return input_char
+                elif(input_string.startswith("volup")):
+                    return "vUp"
+                elif(input_string.startswith("voldown")):
+                    return "vDown"
+                elif(input_string.startswith("light")):
+                    return "light"
+                elif(input_string.startswith("navup")):
+                    return "up"
+                elif(input_string.startswith("navdown")):
+                    return "down"
+                elif(input_string.startswith("navleft")):
+                    return "left"
+                elif(input_string.startswith("navright")):
+                    return "right"
+                elif(input_string.startswith("navok")):
+                    return "ok"
+                elif(input_string.startswith("end")):
+                    return "end"
+                elif(input_string.startswith("leftutil")):
+                    return "lUtil"
+                elif(input_string.startswith("rightutil")):
+                    return "rUtil"
+                elif(input_string.startswith("answer")):
+                    return "answer"
+                
