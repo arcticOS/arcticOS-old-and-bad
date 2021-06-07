@@ -36,7 +36,8 @@ KeyInput = HID.KeyInput()
 if(__name__ == "__main__"):
     # Launch OOBE if needed
     if(UserSettings.getKey("OOBEComplete") == 0):
-        App.launchPath("apps/system/oobe.py")
+        print("Launching OOBE...")
+        App.launchPath("apps/system/oobe.py", PhoneDisplay, KeyInput, BuildInfo, UserSettings)
 
         UserSettings.setKey("OOBEComplete", 1)
 
@@ -46,7 +47,7 @@ if(__name__ == "__main__"):
     PhoneDisplay.refresh()
 
     while True:
-        PhoneDisplay.drawText("Hello, World!", 25, 10, 10)
+        PhoneDisplay.drawText("Launcher", 25, 10, 10)
         PhoneDisplay.drawLine(10, 30, BuildInfo.getKey("screen_width") - 10, 30)
         PhoneDisplay.drawRect(40, 40, 40, 40)
         PhoneDisplay.fillRect(100, 40, 40, 40)

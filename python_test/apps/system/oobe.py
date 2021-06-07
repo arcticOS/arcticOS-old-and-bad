@@ -15,4 +15,17 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
 # MA 02110-1301, USA.
-print("OOBE!")
+def runApp(PhoneDisplay, KeyInput, BuildInfo, UserSettings):
+    print("OOBE start...")
+    PhoneDisplay.clear()
+    PhoneDisplay.drawText("Welcome", 25, 10, 10)
+    PhoneDisplay.drawLine(10, 30, BuildInfo.getKey("screen_width") - 10, 30)
+    PhoneDisplay.drawText("-- OOBE process here --", 18, 10, 35)
+    PhoneDisplay.drawText("Press OK to continue", 18, 10, 50)
+    PhoneDisplay.refresh()
+
+    while True:
+        key = KeyInput.getKey()
+
+        if(key == "ok"):
+            break

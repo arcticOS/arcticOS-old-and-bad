@@ -378,9 +378,12 @@ if os.path.exists('/sys/bus/platform/drivers/gpiomem-bcm2835'): # Check if we're
             self.delay_ms(2000)
             self.module_exit()
 
+        def clear(self):
+            self.draw.rectangle([0, 0, 176, 264], fill=(255, 255, 255, 255))
+
         def refresh(self):
             self.display(self.getbuffer(self.buffer))
-            self.draw.rectangle([0, 0, 176, 264], fill=(255, 255, 255, 255))
+            self.clear()
 
         def drawText(self, text, size, x, y):
             font = ImageFont.truetype("Font.ttc", size)
@@ -404,6 +407,9 @@ if os.path.exists('/sys/bus/platform/drivers/gpiomem-bcm2835'): # Check if we're
         def __init__(self):
             pass
 
+        def getKey(self): # TODO: This
+            return "ok"
+
 else:
     import pygame
     import pygame.font
@@ -420,6 +426,9 @@ else:
 
             self.font_small_normal = pygame.font.SysFont("Sans Serif", 16) # TODO: Use a standard font
 
+        def clear(self):
+            self.display.fill(self.color_white)
+
         def refresh(self):
             for event in pygame.event.get():
                 if(event.type == pygame.QUIT):
@@ -428,7 +437,7 @@ else:
                     exit(0)
 
             pygame.display.update()
-            self.display.fill(self.color_white)
+            self.clear()
 
         def drawText(self, text, size, x, y):
             font = pygame.font.SysFont("Sans Serif", size)
