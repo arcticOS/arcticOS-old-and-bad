@@ -48,6 +48,7 @@ if(__name__ == "__main__"):
 
     while True:
         PhoneDisplay.drawAppHeader("Launcher")
+        PhoneDisplay.drawNavbar()
         PhoneDisplay.drawRect(40, 40, 40, 40)
         PhoneDisplay.fillRect(100, 40, 40, 40)
         PhoneDisplay.drawButton("Button!", 40, 85, 60, 30)

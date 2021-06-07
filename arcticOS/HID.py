@@ -388,6 +388,11 @@ if os.path.exists('/sys/bus/platform/drivers/gpiomem-bcm2835'): # Check if we're
             self.display(self.getbuffer(self.buffer))
             self.clear()
 
+        def getTextBounds(self, text, size):
+            font = ImageFont.truetype("Font.ttc", size)
+            w, h = self.draw.textsize(text, font=font)
+            return (w, h)
+
         def drawText(self, text, size, x, y):
             font = ImageFont.truetype("Font.ttc", size)
             self.draw.text((x, y), text)
@@ -444,6 +449,11 @@ else:
 
             pygame.display.update()
             self.clear()
+
+        def getTextBounds(self, text, size):
+            font = pygame.font.SysFont("Sans Serif", size)
+            bounds = font.size(text)
+            return bounds
 
         def drawText(self, text, size, x, y):
             font = pygame.font.SysFont("Sans Serif", size)
@@ -530,6 +540,16 @@ class Display(DisplayDriver):
     def drawAppHeader(self, appName):
         self.drawText(appName, 25, 10, 10)
         self.drawLine(10, 30, self.width - 10, 30)
+
+    def drawNavbar(self, leftText="Back", centerText="OK", rightText="Menu"):
+        self.drawLine(10, self.height - 20, self.width - 10, self.height - 20)
+
+        centerBounds = self.getTextBounds(centerText, 18)
+        rightBounds = self.getTextBounds(rightText, 18)
+        
+        self.drawText(leftText, 18, 10, self.height - 15)
+        self.drawText(centerText, 18, (self.width / 2) - (centerBounds[0] / 2), self.height - 15)
+        self.drawText(rightText, 18, self.width - 10 - rightBounds[0], self.height - 15)
     
     def drawButton(self, text, x, y, width, height, selected=False, pushed=False):
         self.drawRect(x, y, width, height)
