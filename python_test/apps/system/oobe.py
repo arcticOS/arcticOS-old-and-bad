@@ -18,8 +18,7 @@
 def runApp(PhoneDisplay, KeyInput, BuildInfo, UserSettings):
     print("OOBE start...")
     PhoneDisplay.clear()
-    PhoneDisplay.drawText("Welcome", 25, 10, 10)
-    PhoneDisplay.drawLine(10, 30, BuildInfo.getKey("screen_width") - 10, 30)
+    PhoneDisplay.drawAppHeader("Welcome")
     PhoneDisplay.drawText("-- OOBE process here --", 18, 10, 35)
     PhoneDisplay.drawText("Press OK to continue", 18, 10, 50)
     PhoneDisplay.refresh()

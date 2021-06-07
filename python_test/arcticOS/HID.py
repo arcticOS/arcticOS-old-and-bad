@@ -39,7 +39,7 @@ import os, time, sys
 
 if os.path.exists('/sys/bus/platform/drivers/gpiomem-bcm2835'): # Check if we're running on an RPI
     from PIL import Image,ImageDraw,ImageFont
-    class Display:
+    class DisplayDriver(object):
         def __init__(self):
             import spidev
             import RPi.GPIO
@@ -54,6 +54,9 @@ if os.path.exists('/sys/bus/platform/drivers/gpiomem-bcm2835'): # Check if we're
             self.GRAY1  = 0xC0
             self.GRAY2  = 0x80
             self.BLACK  = 0x00
+
+            self.width = 264
+            self.height = 176
 
             self.GPIO = RPi.GPIO
             self.SPI = spidev.SpiDev()
@@ -414,7 +417,7 @@ else:
     import pygame
     import pygame.font
 
-    class Display:
+    class DisplayDriver(object):
         def __init__(self):
             self.color_black = (0, 0, 0)
             self.color_white = (255, 255, 255)
@@ -425,6 +428,9 @@ else:
             pygame.font.init()
 
             self.font_small_normal = pygame.font.SysFont("Sans Serif", 16) # TODO: Use a standard font
+
+            self.width = 264
+            self.height = 176
 
         def clear(self):
             self.display.fill(self.color_white)
@@ -517,3 +523,10 @@ else:
                 elif(input_string.startswith("answer")):
                     return "answer"
                 
+class Display(DisplayDriver):
+    def __init__(self):
+        super(Display, self).__init__()
+
+    def drawAppHeader(self, appName):
+        self.drawText(appName, 25, 10, 10)
+        self.drawLine(10, 30, self.width - 10, 30)
