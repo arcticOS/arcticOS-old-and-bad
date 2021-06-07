@@ -1,37 +1,28 @@
-## Welcome to GitHub Pages
+## About arcticOS
+arcticOS is an in-development mobile operating system designed to be used on E-ink feature phones. It features a user interface written in Python, as well as an emulator and support for development units made with a Raspberry Pi.
 
-You can use the [editor on GitHub](https://github.com/jhonnystene/arcticOS/edit/gh-pages/index.md) to maintain and preview the content for your website in Markdown files.
+## Features
+### Portability
+arcticOS can be easily ported to different devices and displays. If you can use it with Python, you can run the arcticOS frontend on it.
 
-Whenever you commit to this repository, GitHub Pages will run [Jekyll](https://jekyllrb.com/) to rebuild the pages in your site, from the content in your Markdown files.
+### App Support
+arcticOS supports third-party applications and extensions. Apps can be made in Python, and have access to a growing number of APIs within arcticOS.
 
-### Markdown
+### Emulator
+arcticOS can be developed and emulated on any OS with support for Python 3 and Pygame 2. Input is controlled through the terminal.
 
-Markdown is a lightweight and easy-to-use syntax for styling your writing. It includes conventions for
+## Planned Features
+### Phone Calls & SMS Messaging
+arcticOS will be able to make phone calls, and send/recieve SMS via a connected cellular modem.
 
-```markdown
-Syntax highlighted code block
+### IRC & Matrix Messaging
+arcticOS will be able to connect to IRC and Matrix servers via a connected cellular modem, to allow for easy cross-platform group chatting.
 
-# Header 1
-## Header 2
-### Header 3
+### Email Client
+arcticOS will be able to connect with IMAP or POP3 to any standard Email server, using a connected cellular modem.
 
-- Bulleted
-- List
+### Music Player
+arcticOS will be able to play music in a variety of formats, including WAV, OGG, and FLAC.
 
-1. Numbered
-2. List
-
-**Bold** and _Italic_ and `Code` text
-
-[Link](url) and ![Image](src)
-```
-
-For more details see [GitHub Flavored Markdown](https://guides.github.com/features/mastering-markdown/).
-
-### Jekyll Themes
-
-Your Pages site will use the layout and styles from the Jekyll theme you have selected in your [repository settings](https://github.com/jhonnystene/arcticOS/settings/pages). The name of this theme is saved in the Jekyll `_config.yml` configuration file.
-
-### Support or Contact
-
-Having trouble with Pages? Check out our [documentation](https://docs.github.com/categories/github-pages-basics/) or [contact support](https://support.github.com/contact) and we’ll help you sort it out.
+### Calendar, Calculator, Clock, and Notes
+arcticOS will include multiple "utility" apps, allowing you to manage alerts & alarms, take notes, and use a calculator.
