@@ -19,8 +19,8 @@ def runApp(PhoneDisplay, KeyInput, BuildInfo, UserSettings):
     print("OOBE start...")
     PhoneDisplay.clear()
     PhoneDisplay.drawAppHeader("Welcome")
+    PhoneDisplay.drawNavbar("", "Start", "")
     PhoneDisplay.drawText("-- OOBE process here --", 18, 10, 35)
-    PhoneDisplay.drawText("Press OK to continue", 18, 10, 50)
     PhoneDisplay.refresh()
 
     while True:
