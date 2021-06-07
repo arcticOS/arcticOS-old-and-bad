@@ -568,3 +568,10 @@ class Display(DisplayDriver):
             self.drawRect(x + 2, y + 2, width - 4, height - 4)
 
         self.drawText(text, 20, x + 5, y + 5)
+
+    def drawToggleSwitch(self, x, y, checked=False):
+        self.drawRect(x, y, 20, 20)
+        self.drawRect(x + 1, y + 1, 18, 18)
+        
+        if(checked):
+            self.fillRect(x + 5, y + 5, 10, 10)
