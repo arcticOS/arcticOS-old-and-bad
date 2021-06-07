@@ -22,15 +22,11 @@ def launchApp(app, display, keyinput, buildsettings, usersettings):
     launchPath(app.fileName, display, keyinput, buildsettings, usersettings)
 
 def launchPath(path, display, keyinput, buildsettings, usersettings):
-    with open(path) as appfile:
-        appdata = appfile.read()
-        exec(appdata, globals())
-        runApp(display, keyinput, buildsettings, usersettings)   
     try:
         with open(path) as appfile:
             appdata = appfile.read()
-            exec(appdata)
-            runApp(display, keyinput)
+            exec(appdata, globals())
+            runApp(display, keyinput, buildsettings, usersettings)
     except:
         print("Error in app!")
         return
