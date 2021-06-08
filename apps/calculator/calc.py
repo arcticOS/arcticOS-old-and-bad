@@ -16,6 +16,8 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
 # MA 02110-1301, USA.
 
+import math
+
 def runApp(PhoneDisplay, KeyInput, BuildInfo, UserSettings):
     operations = ["+", "-", "*", "/"]
     operation = 0
@@ -51,6 +53,8 @@ def runApp(PhoneDisplay, KeyInput, BuildInfo, UserSettings):
                     total = str(float(number0) * float(number1))
                 elif(operation == 3):
                     total = str(float(number0) / float(number1))
+                if(float(total) % math.floor(float(total)) == 0):
+                    total = str(math.floor(float(total)))
         else:
             if(key.isdigit()):
                 if(currentNumber == 0):
@@ -92,6 +96,6 @@ def runApp(PhoneDisplay, KeyInput, BuildInfo, UserSettings):
             PhoneDisplay.drawText(number0, 25, 10, 35)
 
         if(currentNumber == 2):
-            PhoneDisplay.drawLine(10, 80, 60, 80)
-            PhoneDisplay.drawText(total, 25, 10, 85)
+            PhoneDisplay.drawLine(10, 90, 60, 90)
+            PhoneDisplay.drawText(total, 25, 10, 90)
         PhoneDisplay.refresh()

@@ -389,16 +389,16 @@ if os.path.exists('/sys/bus/platform/drivers/gpiomem-bcm2835'): # Check if we're
             self.clear()
 
         def getTextBounds(self, text, size):
-            font = ImageFont.truetype("Font.ttc", size)
+            font = ImageFont.truetype("font.ttf", size)
             w, h = self.draw.textsize(text, font=font)
             return (w, h)
 
         def drawText(self, text, size, x, y):
-            font = ImageFont.truetype("Font.ttc", size)
+            font = ImageFont.truetype("font.ttf", size)
             self.draw.text((x, y), text)
 
         def drawTextCentered(self, text, size, x, y):
-            font = ImageFont.truetype("Font.ttc", size)
+            font = ImageFont.truetype("font.ttf", size)
             w, h = self.draw.textsize(text, font=font)
             self.draw.text((x - (w/2), y - (h/2)), text, font=font)
         
@@ -451,17 +451,17 @@ else:
             self.clear()
 
         def getTextBounds(self, text, size):
-            font = pygame.font.SysFont("Sans Serif", size)
+            font = pygame.font.Font("arcticOS/font.ttf", size)
             bounds = font.size(text)
             return bounds
 
         def drawText(self, text, size, x, y):
-            font = pygame.font.SysFont("Sans Serif", size)
+            font = pygame.font.Font("arcticOS/font.ttf", size)
             rendered_text = font.render(text, True, self.color_black)
             self.display.blit(rendered_text, (x, y))
 
         def drawTextCentered(self, text, size, x, y):
-            font = pygame.font.SysFont("Sans Serif", size)
+            font = pygame.font.Font("arcticOS/font.ttf", size)
             bounds = font.size(text)
             x = x - (bounds[0] / 2)
             y = y - (bounds[1] / 2)
@@ -538,18 +538,18 @@ class Display(DisplayDriver):
         super(Display, self).__init__()
 
     def drawAppHeader(self, appName):
-        self.drawText(appName, 25, 10, 10)
-        self.drawLine(10, 30, self.width - 10, 30)
+        self.drawText(appName, 20, 10, 3)
+        self.drawLine(0, 30, self.width, 30)
 
     def drawNavbar(self, leftText="Back", centerText="OK", rightText="Menu"):
-        self.drawLine(10, self.height - 20, self.width - 10, self.height - 20)
+        self.drawLine(0, self.height - 20, self.width, self.height - 20)
 
         centerBounds = self.getTextBounds(centerText, 18)
         rightBounds = self.getTextBounds(rightText, 18)
         
-        self.drawText(leftText, 18, 10, self.height - 15)
-        self.drawText(centerText, 18, (self.width / 2) - (centerBounds[0] / 2), self.height - 15)
-        self.drawText(rightText, 18, self.width - 10 - rightBounds[0], self.height - 15)
+        self.drawText(leftText, 15, 10, self.height - 18)
+        self.drawText(centerText, 15, (self.width / 2) - (centerBounds[0] / 2), self.height - 18)
+        self.drawText(rightText, 15, self.width - 10 - rightBounds[0], self.height - 18)
     
     def drawButton(self, text, x, y, width, height, selected=False):
         self.drawRect(x, y, width, height)
@@ -582,7 +582,7 @@ class Display(DisplayDriver):
             startIndex = 0
         list = list[startIndex:3]
         for item in range(0, len(list)):
-            self.drawText(list[item], 18, 10, 40 + (30 * item))
+            self.drawText(list[item], 18, 10, 38 + (30 * item))
             self.drawLine(10, 30 + (30 * (item + 1)), self.width - 10, 30 + (30 * (item + 1)))
 
         startIndex = selected - startIndex

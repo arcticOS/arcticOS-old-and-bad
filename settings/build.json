@@ -6,5 +6,7 @@
     "version_suffix": "Alpha",
 
     "screen_width": 264,
-    "screen_height": 176
+    "screen_height": 176,
+
+    "do_full_crash": "true"
 }

@@ -49,8 +49,8 @@ if(__name__ == "__main__"):
 
     while True:
         PhoneDisplay.clear()
-        PhoneDisplay.drawText("12:00", 42, 10, 10)
-        PhoneDisplay.drawText("Monday, June 07, 2021", 25, 10, 45)
+        PhoneDisplay.drawText("12:00 PM", 42, 10, 5)
+        PhoneDisplay.drawText("Monday, June 07, 2021", 25, 10, 50)
         PhoneDisplay.drawNavbar("", "Apps", "")
         PhoneDisplay.refresh()
         
