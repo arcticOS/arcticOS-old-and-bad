@@ -16,4 +16,14 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
 # MA 02110-1301, USA.
 
-print("Hello, World!")
+def runApp(PhoneDisplay, KeyInput, BuildInfo, UserSettings):
+    PhoneDisplay.clear()
+    PhoneDisplay.drawAppHeader("Hello, World!")
+    PhoneDisplay.drawNavbar()
+    PhoneDisplay.refresh()
+
+    while True:
+        key = KeyInput.getKey()
+
+        if(key == "ok"):
+            break
