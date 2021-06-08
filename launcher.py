@@ -47,33 +47,48 @@ if(__name__ == "__main__"):
         appNames.append(app.name)
     appSelected = 0
 
-    PhoneDisplay.refresh()
-
     while True:
-        PhoneDisplay.drawAppHeader("Launcher")
-        PhoneDisplay.drawNavbar()
-        PhoneDisplay.drawList(appNames, appSelected)
-        #PhoneDisplay.drawToggleSwitch(40, 40, True)
-        #PhoneDisplay.drawToggleSwitch(80, 40, False)
-        #PhoneDisplay.drawButton("Button!", 40, 85, 60, 30)
-        #PhoneDisplay.drawTextBox("Text box!", 40, 120, 150)
+        PhoneDisplay.clear()
+        PhoneDisplay.drawText("12:00", 42, 10, 10)
+        PhoneDisplay.drawText("Monday, June 07, 2021", 25, 10, 45)
+        PhoneDisplay.drawNavbar("", "Apps", "")
         PhoneDisplay.refresh()
-
-        # Input handling goes here
+        
+        inAppMenu = False
         while True:
             key = KeyInput.getKey()
+            if(key == "ok"):
+                inAppMenu = True
+                while inAppMenu:
+                    PhoneDisplay.drawAppHeader("Launcher")
+                    PhoneDisplay.drawNavbar("Back", "Open", "")
+                    PhoneDisplay.drawList(appNames, appSelected)
+                    #PhoneDisplay.drawToggleSwitch(40, 40, True)
+                    #PhoneDisplay.drawToggleSwitch(80, 40, False)
+                    #PhoneDisplay.drawButton("Button!", 40, 85, 60, 30)
+                    #PhoneDisplay.drawTextBox("Text box!", 40, 120, 150)
+                    PhoneDisplay.refresh()
 
-            if(key == "down"):
-                appSelected += 1
-                if(appSelected == len(appNames)):
-                    appSelected = 0
-                break
-            elif(key == "up"):
-                appSelected -= 1
-                if(appSelected < 0):
-                    appSelected = len(appNames) - 1
-                break
-            elif(key == "ok"):
-                App.launchApp(apps[appSelected], PhoneDisplay, KeyInput, BuildInfo, UserSettings)
+                    # Input handling goes here
+                    while True:
+                        key = KeyInput.getKey()
+
+                        if(key == "down"):
+                            appSelected += 1
+                            if(appSelected == len(appNames)):
+                                appSelected = 0
+                            break
+                        elif(key == "up"):
+                            appSelected -= 1
+                            if(appSelected < 0):
+                                appSelected = len(appNames) - 1
+                            break
+                        elif(key == "ok"):
+                            App.launchApp(apps[appSelected], PhoneDisplay, KeyInput, BuildInfo, UserSettings)
+                            appSelected = 0
+                            break
+                        elif(key == "end"):
+                            inAppMenu = False
+                            break
                 appSelected = 0
                 break
