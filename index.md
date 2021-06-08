@@ -4,6 +4,9 @@ arcticOS is an in-development mobile operating system designed to be used on E-i
 ### Target Hardware
 arcticOS is designed to be used on a QWERTY-style phone with an AllWinner A13 CPU, 64 MB of RAM, and an SD card for storage.
 
+## Running the Emulator
+The arcticOS emulator can be run on any computer with Python 3.8 and Pygame 2 installed. Simply download the code, and run `launcher.py` inside of a terminal window. **RUNNING IN THE TERMINAL IS IMPORTANT** because all buttons are inputted through terminal input.
+
 ## Features
 ### Portability
 arcticOS can be easily ported to different devices and displays. If you can use it with Python, you can run the arcticOS frontend on it.
@@ -11,8 +14,8 @@ arcticOS can be easily ported to different devices and displays. If you can use 
 ### App Support
 arcticOS supports third-party applications and extensions. Apps can be made in Python, and have access to a growing number of APIs within arcticOS.
 
-### Emulator
-arcticOS can be developed and emulated on any OS with support for Python 3 and Pygame 2. Input is controlled through the terminal.
+### Clean and Common UI
+arcticOS's UI framework ensures that all apps use the same basic UI elements, so apps share the same visual aesthetic.
 
 ## Planned Features
 ### Phone Calls & SMS Messaging
