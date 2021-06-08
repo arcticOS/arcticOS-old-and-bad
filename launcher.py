@@ -22,11 +22,11 @@ import json
 
 from arcticOS import HID, App, PreferenceStorage
 
-# TODO: Remove this to prevent settings reset
-PreferenceStorage.factoryReset()
-
 global BuildInfo, UserSettings
 BuildInfo = PreferenceStorage.PreferenceStorage("settings/build.json")
+if(BuildInfo.getKey("always_factory_reset")):
+    PreferenceStorage.factoryReset()
+
 UserSettings = PreferenceStorage.PreferenceStorage("settings/user.json")
 
 global PhoneDisplay, KeyInput
@@ -48,7 +48,7 @@ if(__name__ == "__main__"):
     appSelected = 0
 
     while True:
-        PhoneDisplay.clear()
+        PhoneDisplay.clear() # TODO: get the actual time
         PhoneDisplay.drawText("12:00 PM", 42, 10, 5)
         PhoneDisplay.drawText("Monday, June 07, 2021", 25, 10, 50)
         PhoneDisplay.drawNavbar("", "Apps", "")

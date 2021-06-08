@@ -22,7 +22,7 @@ def launchApp(app, display, keyinput, buildsettings, usersettings):
     launchPath(app.fileName, display, keyinput, buildsettings, usersettings)
 
 def launchPath(path, display, keyinput, buildsettings, usersettings):
-    if(buildsettings.getKey("do_full_crash") == "true"):
+    if(buildsettings.getKey("do_full_crash")):
         with open(path) as appfile:
             appdata = appfile.read()
             exec(appdata, globals())
