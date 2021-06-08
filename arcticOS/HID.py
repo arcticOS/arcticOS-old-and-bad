@@ -566,7 +566,7 @@ class Display(DisplayDriver):
 
         self.drawTextCentered(text, 20, x + (width / 2), y + (height / 2))
 
-    def drawTextBox(self, text, x, y, width, height=25, selected=False):
+    def drawTextBox(self, text, x, y, width, height=35, selected=False):
         self.drawRect(x, y, width, height)
         self.drawRect(x + 1, y + 1, width - 2, height - 2)
         
@@ -605,3 +605,126 @@ class Display(DisplayDriver):
         
         startIndex = cursorY - startIndex
         self.drawLine(10 + self.getTextBounds(list[startIndex][:cursorX], 18)[0], 38 + (20 * startIndex), 10 + self.getTextBounds(list[startIndex][:cursorX], 18)[0], 58 + (20 * startIndex))
+
+    def getString(self, KeyInput, info, string=""):
+        editing = True
+        while editing:
+            self.drawAppHeader(info)
+            self.drawNavbar("Cancel", "", "Finish")
+            self.drawTextBox(string, 10, 40, self.width-20, selected=True)
+            self.refresh()
+
+            while True:
+                key = KeyInput.getKey()
+                if(key == "end"):
+                    editing = False
+                    string = ""
+                    break
+                elif(key in "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ123456790 "): # TODO: add all characters
+                    string = string + key
+                    break
+                elif(key == "back"):
+                    string = string[:len(string) - 2]
+                    break
+                elif(key == "answer"):
+                    editing = False
+                    break
+        return string
+
+    def getMultilineString(self, KeyInput, info, string=""):
+        editing = True
+        cursorX = 0
+        cursorY = 0
+        while editing:
+            self.drawAppHeader(info)
+            self.drawNavbar()
+            self.drawTextBlock(string, cursorX, cursorY, True)
+            self.refresh()
+
+            while True:
+                key = KeyInput.getKey()
+                if(key == "end"):
+                    editing = False
+                    break
+                elif(key == "down"):
+                    cursorY += 1
+                    if(cursorY == len(string.split("\n"))):
+                        cursorY = len(string.split("\n")) - 1
+                    break
+                elif(key == "up"):
+                    cursorY -= 1
+                    if(cursorY < 0):
+                        cursorY = 0
+                    break
+                elif(key == "right"):
+                    cursorX += 1
+                    if(cursorX == len(string.split("\n")[cursorY])):
+                        cursorX = len(string.split("\n")[cursorY]) - 1
+                    break
+                elif(key == "left"):
+                    cursorX -= 1
+                    if(cursorX < 0):
+                        cursorX = 0
+                    break
+                elif(key in "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ123456790 "): # TODO: add all characters
+                    lines = string.split("\n")
+                    lines[cursorY] = lines[cursorY][:cursorX] + key + lines[cursorY][cursorX:]
+                    cursorX += 1
+                    string = ""
+                    for line in lines:
+                        string = string + line + "\n"
+                    break
+                elif(key == "enter"):
+                    lines = string.split("\n")
+                    lines[cursorY] = lines[cursorY][:cursorX] + "\n" + lines[cursorY][cursorX:]
+                    cursorX = 0
+                    cursorY += 1
+                    string = ""
+                    for line in lines:
+                        string = string + line + "\n"
+                    break
+                elif(key == "back"):
+                    lines = string.split("\n")
+                    lines[cursorY] = lines[cursorY][:cursorX - 1] + lines[cursorY][cursorX:]
+                    cursorX -= 1
+                    string = ""
+                    for line in lines:
+                        string = string + line + "\n"
+                    break
+        return string
+    
+    def getMenuSelection(self, KeyInput, info, menuItems, specialButton=""):
+        inMenu = True
+        itemSelected = 0
+        while inMenu:
+            self.drawAppHeader(info)
+            self.drawNavbar("Back", "Select", specialButton)
+            self.drawList(menuItems, itemSelected)
+            self.refresh()
+
+            # Input handling goes here
+            while True:
+                key = KeyInput.getKey()
+
+                if(key == "down"):
+                    itemSelected += 1
+                    if(itemSelected == len(menuItems)):
+                        itemSelected = 0
+                    break
+                elif(key == "up"):
+                    itemSelected -= 1
+                    if(itemSelected < 0):
+                        itemSelected = len(menuItems) - 1
+                    break
+                elif(key == "ok"):
+                    inMenu = False
+                    break
+                elif(key == "end"):
+                    inMenu = False
+                    itemSelected = -1
+                    break
+                elif(key == "answer" and specialButton != ""):
+                    inMenu = False
+                    itemSelected = -2
+                    break
+        return itemSelected

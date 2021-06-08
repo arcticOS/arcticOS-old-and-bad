@@ -18,120 +18,30 @@
 
 def runApp(PhoneDisplay, KeyInput, BuildInfo, UserSettings):
     PhoneDisplay.clear()
-
-    notes = UserSettings.getKey("Notes")
-    noteNames = []
-    for note in notes:
-        noteNames.append(note["title"])
-    noteSelected = 0
-
     inApp = True
     while inApp:
-        PhoneDisplay.drawAppHeader("Notes")
-        PhoneDisplay.drawNavbar("Exit", "Edit", "New")
-        PhoneDisplay.drawList(noteNames, noteSelected)
-        PhoneDisplay.refresh()
-        
-        while True:
-            key = KeyInput.getKey()
-
-            if(key == "down"):
-                noteSelected += 1
-                if(noteSelected == len(noteNames)):
-                    noteSelected = 0
-                break
-            elif(key == "up"):
-                noteSelected -= 1
-                if(noteSelected < 0):
-                    noteSelected = len(noteNames) - 1
-                break
-            elif(key == "ok"):
-                editNote(notes, noteSelected, PhoneDisplay, KeyInput, BuildInfo, UserSettings)
-                noteSelected = 0
-                break
-            elif(key == "end"):
-                inApp = False
-                break
-            elif(key == "answer"):
-                createNote(notes, PhoneDisplay, KeyInput, BuildInfo, UserSettings)
-                break
+        notes = UserSettings.getKey("Notes")
+        noteNames = []
+        for note in notes:
+            noteNames.append(note["title"])
+        selection = PhoneDisplay.getMenuSelection(KeyInput, "Select Note", noteNames, specialButton="New")
+        if(selection == -1):
+            inApp = False
+        elif(selection == -2):
+            createNote(notes, PhoneDisplay, KeyInput, BuildInfo, UserSettings)
+        elif(selection >= 0):
+            editNote(notes, selection, PhoneDisplay, KeyInput, BuildInfo, UserSettings)
 
 def createNote(noteList, PhoneDisplay, KeyInput, BuildInfo, UserSettings):
     editing = True
     noteData = {"title": "", "content": ""}
-    while editing:
-        PhoneDisplay.drawAppHeader("Create Note")
-        PhoneDisplay.drawNavbar()
-        PhoneDisplay.drawText(noteData["title"], 25, 10, 30)
-        PhoneDisplay.refresh()
-
-        while True:
-            key = KeyInput.getKey()
-            if(key == "end"):
-                editing = False
-                break
-            elif(key in "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ123456790 "): # TODO: add all characters
-                noteData["title"] = noteData["title"] + key
-                break
-            elif(key == "back"):
-                noteData["title"] = noteData["title"][:len(noteData["title"]) - 2]
-                break
-            elif(key == "enter"):
-                editing = False
-                noteList.append(noteData)
-                UserSettings.setKey("Notes", noteList)
-                editNote(noteList, len(noteList) - 1, PhoneDisplay, KeyInput, BuildInfo, UserSettings)
-                break
+    noteData["title"] = PhoneDisplay.getString(KeyInput, "Note Name")
+    if(noteData["title"] == ""):
+        noteData["title"] = "Untitled Note"
+    noteList.append(noteData)
+    UserSettings.setKey("Notes", noteList)
+    editNote(noteList, len(noteList) - 1, PhoneDisplay, KeyInput, BuildInfo, UserSettings)
 
 def editNote(noteList, noteSelected, PhoneDisplay, KeyInput, BuildInfo, UserSettings):
-    editing = True
-    cursorX = 0
-    cursorY = 0
-    while editing:
-        PhoneDisplay.drawAppHeader(noteList[noteSelected]["title"])
-        PhoneDisplay.drawNavbar()
-        PhoneDisplay.drawTextBlock(noteList[noteSelected]["content"], cursorX, cursorY, True)
-        PhoneDisplay.refresh()
-
-        while True:
-            key = KeyInput.getKey()
-            if(key == "end"):
-                editing = False
-                break
-            elif(key == "down"):
-                cursorY += 1
-                if(cursorY == len(noteList[noteSelected]["content"].split("\n"))):
-                    cursorY = len(noteList[noteSelected]["content"].split("\n")) - 1
-                break
-            elif(key == "up"):
-                cursorY -= 1
-                if(cursorY < 0):
-                    cursorY = 0
-                break
-            elif(key == "right"):
-                cursorX += 1
-                if(cursorX == len(noteList[noteSelected]["content"].split("\n")[cursorY])):
-                    cursorX = len(noteList[noteSelected]["content"].split("\n")[cursorY]) - 1
-                break
-            elif(key == "left"):
-                cursorX -= 1
-                if(cursorX < 0):
-                    cursorX = 0
-                break
-            elif(key in "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ123456790 "): # TODO: add all characters
-                lines = noteList[noteSelected]["content"].split("\n")
-                lines[cursorY] = lines[cursorY][:cursorX] + key + lines[cursorY][cursorX:]
-                cursorX += 1
-                noteList[noteSelected]["content"] = ""
-                for line in lines:
-                    noteList[noteSelected]["content"] = noteList[noteSelected]["content"] + line + "\n"
-                break
-            elif(key == "back"):
-                lines = noteList[noteSelected]["content"].split("\n")
-                lines[cursorY] = lines[cursorY][:cursorX - 1] + lines[cursorY][cursorX:]
-                cursorX -= 1
-                noteList[noteSelected]["content"] = ""
-                for line in lines:
-                    noteList[noteSelected]["content"] = noteList[noteSelected]["content"] + line + "\n"
-                break
+    noteList[noteSelected]["content"] = PhoneDisplay.getMultilineString(KeyInput, noteList[noteSelected]["title"], noteList[noteSelected]["content"])
     UserSettings.setKey("Notes", noteList)
