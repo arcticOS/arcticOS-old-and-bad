@@ -18,6 +18,7 @@
 
 import json
 
+# Resets all user settings to their default value. Will cause OOBE to start on next Launcher start.
 def factoryReset():
     with open("settings/user_template.json") as sourcefile:
         with open("settings/user.json", "w") as destfile:
@@ -29,6 +30,7 @@ class PreferenceStorage:
         self.data = {}
         self.reload()
 
+    # Refreshes from disk.
     def reload(self):
         try:
             with open(self.path) as jsonfile:
@@ -36,6 +38,7 @@ class PreferenceStorage:
         except:
             print("ERROR: Couldn't read stored preferences: " + self.path)
 
+    # Writes the latest data to disk.
     def write(self):
         try:
             with open(self.path, "w") as jsonfile:
@@ -43,21 +46,25 @@ class PreferenceStorage:
         except:
             print("ERROR: Failed to save preferences to " + self.path)
 
+    # Gets a preference key.
     def getKey(self, key):
         if(self.hasKey(key)):
             return self.data[key]
         else:
             return None
     
+    # Sets a preference key and writes the preferences to disk.
     def setKey(self, key, value):
         self.data[key] = value
         self.write()
 
+    # Returns True if the preference file has a specified key.
     def hasKey(self, key):
         if(key in self.data):
             return True
         return False
 
+    # Returns True if there is a value in the key.
     def doesKeyHaveValue(self, key):
         if(key in self.data):
             if(key != ""):
