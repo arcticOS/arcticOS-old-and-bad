@@ -503,6 +503,7 @@ else:
                     print("rightutil - Right Utility Button")
                     print("answer - Answer Call")
                     print("back - Backspace")
+                    print("enter - Enter")
                 elif(input_string.startswith("string:")):
                     for character in input_string[7:]:
                         self.inputBuffer.append(character)
@@ -535,6 +536,8 @@ else:
                     return "answer"
                 elif(input_string.startswith("back")):
                     return "back"
+                elif(input_string.startswith("enter")):
+                    return "enter"
                 
 class Display(DisplayDriver):
     def __init__(self):

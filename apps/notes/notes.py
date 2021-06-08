@@ -28,7 +28,7 @@ def runApp(PhoneDisplay, KeyInput, BuildInfo, UserSettings):
     inApp = True
     while inApp:
         PhoneDisplay.drawAppHeader("Notes")
-        PhoneDisplay.drawNavbar("Exit", "Edit", "")
+        PhoneDisplay.drawNavbar("Exit", "Edit", "New")
         PhoneDisplay.drawList(noteNames, noteSelected)
         PhoneDisplay.refresh()
         
@@ -52,13 +52,43 @@ def runApp(PhoneDisplay, KeyInput, BuildInfo, UserSettings):
             elif(key == "end"):
                 inApp = False
                 break
+            elif(key == "answer"):
+                createNote(notes, PhoneDisplay, KeyInput, BuildInfo, UserSettings)
+                break
+
+def createNote(noteList, PhoneDisplay, KeyInput, BuildInfo, UserSettings):
+    editing = True
+    noteData = {"title": "", "content": ""}
+    while editing:
+        PhoneDisplay.drawAppHeader("Create Note")
+        PhoneDisplay.drawNavbar()
+        PhoneDisplay.drawText(noteData["title"], 25, 10, 30)
+        PhoneDisplay.refresh()
+
+        while True:
+            key = KeyInput.getKey()
+            if(key == "end"):
+                editing = False
+                break
+            elif(key in "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ123456790 "): # TODO: add all characters
+                noteData["title"] = noteData["title"] + key
+                break
+            elif(key == "back"):
+                noteData["title"] = noteData["title"][:len(noteData["title"]) - 2]
+                break
+            elif(key == "enter"):
+                editing = False
+                noteList.append(noteData)
+                UserSettings.setKey("Notes", noteList)
+                editNote(noteList, len(noteList) - 1, PhoneDisplay, KeyInput, BuildInfo, UserSettings)
+                break
 
 def editNote(noteList, noteSelected, PhoneDisplay, KeyInput, BuildInfo, UserSettings):
     editing = True
     cursorX = 0
     cursorY = 0
     while editing:
-        PhoneDisplay.drawAppHeader("Notes")
+        PhoneDisplay.drawAppHeader(noteList[noteSelected]["title"])
         PhoneDisplay.drawNavbar()
         PhoneDisplay.drawTextBlock(noteList[noteSelected]["content"], cursorX, cursorY, True)
         PhoneDisplay.refresh()

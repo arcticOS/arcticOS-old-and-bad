@@ -1,11 +1,1 @@
-{
-    "OOBEComplete": 0,
-    "OwnerName": "",
-    "Notes": 
-    [
-        {
-            "title": "Welcome to arcticOS!",
-            "content": "Hello, World!\nThis is a note!\nThis line is really long and won't all be put on screen at once!\nThis is more lines!\nThis is another line!\nThis is the last line!"
-        }
-    ]
-}
+{"OOBEComplete": 1, "OwnerName": "", "Notes": [{"title": "Welcome to arcticOS!", "content": "Hello, World!\nThis is a note!\nThis line is really long and won't all be put on screen at once!\nThis is more lines!\nThis is another line!\nThis is the last line!"}, {"title": "Note Title", "content": "Hello\n\n\n\n\n"}]}
