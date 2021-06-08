@@ -4,13 +4,13 @@ arcticOS is an open-source, Linux-based mobile operating system designed for fea
 ## Features
 - Emulator
 - Calculator
+- Notes
 
 ## Planned Features
 - Calls and SMS with the SIM7600* series of modems.
 - IRC and Matrix messages
 - Music Player
 - Calendar
-- Notes
 - Clock with alarms
 - E-mail client
 - OTA updates?

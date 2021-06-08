@@ -502,6 +502,7 @@ else:
                     print("leftutil - Left Utility Button")
                     print("rightutil - Right Utility Button")
                     print("answer - Answer Call")
+                    print("back - Backspace")
                 elif(input_string.startswith("string:")):
                     for character in input_string[7:]:
                         self.inputBuffer.append(character)
@@ -532,6 +533,8 @@ else:
                     return "rUtil"
                 elif(input_string.startswith("answer")):
                     return "answer"
+                elif(input_string.startswith("back")):
+                    return "back"
                 
 class Display(DisplayDriver):
     def __init__(self):
@@ -580,10 +583,22 @@ class Display(DisplayDriver):
         startIndex = selected - 3
         if(startIndex < 0):
             startIndex = 0
-        list = list[startIndex:3]
+        list = list[startIndex:startIndex+3]
         for item in range(0, len(list)):
             self.drawText(list[item], 18, 10, 38 + (30 * item))
             self.drawLine(10, 30 + (30 * (item + 1)), self.width - 10, 30 + (30 * (item + 1)))
 
         startIndex = selected - startIndex
         self.drawLine(10, 59 + (30 * startIndex), self.width - 10, 59 + (30 * startIndex))
+    
+    def drawTextBlock(self, block, cursorX=0, cursorY=0, drawCursor=False):
+        list = block.split("\n")
+        startIndex = cursorY - 4
+        if(startIndex < 0):
+            startIndex = 0
+        list = list[startIndex:startIndex+5]
+        for item in range(0, len(list)):
+            self.drawText(list[item], 18, 10, 38 + (20 * item))
+        
+        startIndex = cursorY - startIndex
+        self.drawLine(10 + self.getTextBounds(list[startIndex][:cursorX], 18)[0], 38 + (20 * startIndex), 10 + self.getTextBounds(list[startIndex][:cursorX], 18)[0], 58 + (20 * startIndex))
