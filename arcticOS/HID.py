@@ -577,7 +577,6 @@ class Display(DisplayDriver):
             self.fillRect(x + 5, y + 5, 10, 10)
     
     def drawList(self, list, selected=0):
-        # 71 pixels high each
         startIndex = selected - 3
         if(startIndex < 0):
             startIndex = 0
