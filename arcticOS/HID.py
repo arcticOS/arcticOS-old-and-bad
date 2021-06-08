@@ -575,3 +575,16 @@ class Display(DisplayDriver):
         
         if(checked):
             self.fillRect(x + 5, y + 5, 10, 10)
+    
+    def drawList(self, list, selected=0):
+        # 71 pixels high each
+        startIndex = selected - 3
+        if(startIndex < 0):
+            startIndex = 0
+        list = list[startIndex:3]
+        for item in range(0, len(list)):
+            self.drawText(list[item], 18, 10, 40 + (30 * item))
+            self.drawLine(10, 30 + (30 * (item + 1)), self.width - 10, 30 + (30 * (item + 1)))
+
+        startIndex = selected - startIndex
+        self.drawLine(10, 59 + (30 * startIndex), self.width - 10, 59 + (30 * startIndex))

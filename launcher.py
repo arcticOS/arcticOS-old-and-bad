@@ -41,24 +41,39 @@ if(__name__ == "__main__"):
 
         UserSettings.setKey("OOBEComplete", 1)
 
-    for app in App.getAllApps("apps"):
-        print(app.name + " + " + app.fileName)
+    apps = App.getAllApps("apps")
+    appNames = []
+    for app in apps:
+        appNames.append(app.name)
+    appSelected = 0
 
     PhoneDisplay.refresh()
 
     while True:
         PhoneDisplay.drawAppHeader("Launcher")
         PhoneDisplay.drawNavbar()
-        PhoneDisplay.drawToggleSwitch(40, 40, True)
-        PhoneDisplay.drawToggleSwitch(80, 40, False)
-        PhoneDisplay.drawButton("Button!", 40, 85, 60, 30)
-        PhoneDisplay.drawTextBox("Text box!", 40, 120, 150)
+        PhoneDisplay.drawList(appNames, appSelected)
+        #PhoneDisplay.drawToggleSwitch(40, 40, True)
+        #PhoneDisplay.drawToggleSwitch(80, 40, False)
+        #PhoneDisplay.drawButton("Button!", 40, 85, 60, 30)
+        #PhoneDisplay.drawTextBox("Text box!", 40, 120, 150)
         PhoneDisplay.refresh()
 
         # Input handling goes here
         while True:
             key = KeyInput.getKey()
 
-            if(key == "ok"):
+            if(key == "down"):
+                appSelected += 1
+                if(appSelected == len(appNames)):
+                    appSelected = 0
                 break
-
+            elif(key == "up"):
+                appSelected -= 1
+                if(appSelected < 0):
+                    appSelected = len(appNames) - 1
+                break
+            elif(key == "ok"):
+                App.launchApp(apps[appSelected], PhoneDisplay, KeyInput, BuildInfo, UserSettings)
+                appSelected = 0
+                break
