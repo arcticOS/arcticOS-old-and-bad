@@ -411,7 +411,7 @@ if os.path.exists('/sys/bus/platform/drivers/gpiomem-bcm2835'): # Check if we're
         def drawLine(self, x1, y1, x2, y2):
             self.draw.line([x1, y1, x2, y2], fill=0x00)
     
-    class KeyInput:
+    class KeyDriver(object):
         def __init__(self):
             pass
 
@@ -477,7 +477,7 @@ else:
         def drawLine(self, x1, y1, x2, y2):
             pygame.draw.line(self.display, self.color_black, (x1, y1), (x2, y2))
 
-    class KeyInput:
+    class KeyDriver(object):
         def __init__(self):
             self.inputBuffer = []
 
@@ -538,7 +538,24 @@ else:
                     return "back"
                 elif(input_string.startswith("enter")):
                     return "enter"
-                
+
+class KeyInput(KeyDriver):
+    def __init__(self):
+        super(KeyDriver, self).__init__()
+        self.inputBuffer = []
+    
+    def isPrintable(self, char):
+        if(char in "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ`1234567890-=~!@#$%^&*()_+[]\\{}|;\':\",./<>? "):
+            return True
+        return False
+
+    def getPrintableCharacter(self):
+        while True:
+            char = self.getKey()
+
+            if(self.isPrintable(char)):
+                return char
+
 class Display(DisplayDriver):
     def __init__(self):
         super(Display, self).__init__()
@@ -620,7 +637,7 @@ class Display(DisplayDriver):
                     editing = False
                     string = ""
                     break
-                elif(key in "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ123456790 "): # TODO: add all characters
+                elif(KeyInput.isPrintable(key)): # TODO: add all characters
                     string = string + key
                     break
                 elif(key == "back"):
@@ -658,7 +675,7 @@ class Display(DisplayDriver):
                     break
                 elif(key == "right"):
                     cursorX += 1
-                    if(cursorX == len(string.split("\n")[cursorY])):
+                    if(cursorX > len(string.split("\n")[cursorY])):
                         cursorX = len(string.split("\n")[cursorY]) - 1
                     break
                 elif(key == "left"):
@@ -666,7 +683,7 @@ class Display(DisplayDriver):
                     if(cursorX < 0):
                         cursorX = 0
                     break
-                elif(key in "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ123456790 "): # TODO: add all characters
+                elif(KeyInput.isPrintable(key)): # TODO: add all characters
                     lines = string.split("\n")
                     lines[cursorY] = lines[cursorY][:cursorX] + key + lines[cursorY][cursorX:]
                     cursorX += 1
