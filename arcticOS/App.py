@@ -18,10 +18,17 @@
 
 import os, json
 
+# This lets you call launchPath with 9 less characters!
+# I don't know why this is in here, but I'll keep it just in case.
 def launchApp(app, display, keyinput, buildsettings, usersettings):
     launchPath(app.fileName, display, keyinput, buildsettings, usersettings)
 
+# This launches an app by putting its code into exec() with global scope.
 def launchPath(path, display, keyinput, buildsettings, usersettings):
+    # The do_full_crash key decides whether or not an error in an app should
+    # bring down the whole OS. This should obviously never be enabled in
+    # production, but it is useful for development since Python will show
+    # errors this way.
     if(buildsettings.getKey("do_full_crash")):
         with open(path) as appfile:
             appdata = appfile.read()
@@ -37,6 +44,7 @@ def launchPath(path, display, keyinput, buildsettings, usersettings):
             print("Error in app!")
             return
 
+# Get a list of all apps in the apps/ folder with a valid manifest.
 def getAllApps(path):
     appList = []
     for app in os.listdir(path):
@@ -49,6 +57,7 @@ def getAllApps(path):
 
     return appList
 
+# This stores basic information about an app, including the name, icon (unused), and file path.
 class App:
     def __init__(self, path):
         self.name = ""
