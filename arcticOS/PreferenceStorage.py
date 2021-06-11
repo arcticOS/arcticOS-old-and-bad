@@ -24,6 +24,7 @@ def factoryReset():
         with open("settings/user.json", "w") as destfile:
             destfile.write(sourcefile.read())
 
+# Just a basic wrapper for dictionaries that can autowrite back to JSON.
 class PreferenceStorage:
     def __init__(self, path):
         self.path = path
