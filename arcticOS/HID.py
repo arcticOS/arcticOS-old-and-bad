@@ -39,6 +39,9 @@ import os, time, sys
 
 if os.path.exists('/sys/bus/platform/drivers/gpiomem-bcm2835'): # Check if we're running on an RPI
     from PIL import Image,ImageDraw,ImageFont
+
+    # This driver was written by Waveshare and modified to work with arcticOS.
+    # I don't know what any of the display commands do, so you're on your own here.
     class DisplayDriver(object):
         def __init__(self):
             import spidev
@@ -411,6 +414,7 @@ if os.path.exists('/sys/bus/platform/drivers/gpiomem-bcm2835'): # Check if we're
         def drawLine(self, x1, y1, x2, y2):
             self.draw.line([x1, y1, x2, y2], fill=0x00)
     
+    # This is a completely empty keyboard driver that I'm using until I start using the actual devkit for things.
     class KeyDriver(object):
         def __init__(self):
             pass
@@ -422,6 +426,7 @@ else:
     import pygame
     import pygame.font
 
+    # This mainly just wraps Pygame functions into a DisplayDriver.
     class DisplayDriver(object):
         def __init__(self):
             self.color_black = (0, 0, 0)
@@ -477,6 +482,7 @@ else:
         def drawLine(self, x1, y1, x2, y2):
             pygame.draw.line(self.display, self.color_black, (x1, y1), (x2, y2))
 
+    # This reads terminal input and converts it to input for the OS.
     class KeyDriver(object):
         def __init__(self):
             self.inputBuffer = []
@@ -539,16 +545,19 @@ else:
                 elif(input_string.startswith("enter")):
                     return "enter"
 
+# This extends the KeyDriver so it can provide shared functionality across hardware.
 class KeyInput(KeyDriver):
     def __init__(self):
         super(KeyDriver, self).__init__()
         self.inputBuffer = []
     
+    # This returns true if a character is "printable"
     def isPrintable(self, char):
         if(char in "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ`1234567890-=~!@#$%^&*()_+[]\\{}|;\':\",./<>? "):
             return True
         return False
 
+    # This gets a "printable" character only.
     def getPrintableCharacter(self):
         while True:
             char = self.getKey()
@@ -556,14 +565,17 @@ class KeyInput(KeyDriver):
             if(self.isPrintable(char)):
                 return char
 
+# This extends the DisplayDriver so it can provide shared functionality across hardware.
 class Display(DisplayDriver):
     def __init__(self):
         super(Display, self).__init__()
 
+    # Draws app name and a fancy line at the top of the screen.
     def drawAppHeader(self, appName):
         self.drawText(appName, 20, 10, 3)
         self.drawLine(0, 30, self.width, 30)
 
+    # Draws navigation information and a fancy line at the bottom of the screen.
     def drawNavbar(self, leftText="Back", centerText="OK", rightText="Menu"):
         self.drawLine(0, self.height - 20, self.width, self.height - 20)
 
@@ -574,6 +586,7 @@ class Display(DisplayDriver):
         self.drawText(centerText, 15, (self.width / 2) - (centerBounds[0] / 2), self.height - 18)
         self.drawText(rightText, 15, self.width - 10 - rightBounds[0], self.height - 18)
     
+    # Draws a basic button.
     def drawButton(self, text, x, y, width, height, selected=False):
         self.drawRect(x, y, width, height)
         self.drawRect(x + 1, y + 1, width - 2, height - 2)
@@ -583,6 +596,7 @@ class Display(DisplayDriver):
 
         self.drawTextCentered(text, 20, x + (width / 2), y + (height / 2))
 
+    # Draws a basic text box.
     def drawTextBox(self, text, x, y, width, height=35, selected=False):
         self.drawRect(x, y, width, height)
         self.drawRect(x + 1, y + 1, width - 2, height - 2)
@@ -592,6 +606,7 @@ class Display(DisplayDriver):
 
         self.drawText(text, 20, x + 5, y + 5)
 
+    # Draws a basic toggle switch.
     def drawToggleSwitch(self, x, y, checked=False):
         self.drawRect(x, y, 20, 20)
         self.drawRect(x + 1, y + 1, 18, 18)
@@ -599,6 +614,7 @@ class Display(DisplayDriver):
         if(checked):
             self.fillRect(x + 5, y + 5, 10, 10)
     
+    # Draws a list of items.
     def drawList(self, list, selected=0):
         startIndex = selected - 3
         if(startIndex < 0):
@@ -611,6 +627,7 @@ class Display(DisplayDriver):
         startIndex = selected - startIndex
         self.drawLine(10, 59 + (30 * startIndex), self.width - 10, 59 + (30 * startIndex))
     
+    # Draws a large block of text.
     def drawTextBlock(self, block, cursorX=0, cursorY=0, drawCursor=False):
         list = block.split("\n")
         startIndex = cursorY - 4
@@ -623,6 +640,7 @@ class Display(DisplayDriver):
         startIndex = cursorY - startIndex
         self.drawLine(10 + self.getTextBounds(list[startIndex][:cursorX], 18)[0], 38 + (20 * startIndex), 10 + self.getTextBounds(list[startIndex][:cursorX], 18)[0], 58 + (20 * startIndex))
 
+    # Returns a single line of text.
     def getString(self, KeyInput, info, string=""):
         editing = True
         while editing:
@@ -648,6 +666,7 @@ class Display(DisplayDriver):
                     break
         return string
 
+    # Returns a block of text.
     def getMultilineString(self, KeyInput, info, string=""):
         editing = True
         cursorX = 0
@@ -710,6 +729,7 @@ class Display(DisplayDriver):
                     break
         return string
     
+    # Returns the user's selection from a list.
     def getMenuSelection(self, KeyInput, info, menuItems, specialButton=""):
         inMenu = True
         itemSelected = 0
