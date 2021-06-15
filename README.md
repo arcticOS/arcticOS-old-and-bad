@@ -3,6 +3,14 @@
 
 An open-source operating system for feature phones with E-ink displays.
 
+## The Vision
+
+Every modern phone company either sells your data or your attention, and they make you pay huge amounts to let them do it. I aim to change that, by building a phone that is:
+- Low-cost
+- Fully open-source, in both hardware and software
+- As modular as possible, with no stupid software locks to prevent you from extending, repairing, or upgrading your phone
+- Completely ad-free
+- Easy for anyone with basic knowledge in SMD soldering and 3D printing to replicate
 
 ## Features
 
@@ -21,6 +29,7 @@ An open-source operating system for feature phones with E-ink displays.
 - E-mail client
 - OTA updates?
 - User Data Encryption
+
 ## Roadmap
 
 - Develop usable demo of OS
@@ -35,6 +44,7 @@ An open-source operating system for feature phones with E-ink displays.
 - Fix issues with beta units
 - Stress test and improve hardware until it is ready for release
 - Begin shipping final units
+
 ## Run Locally
 
 Clone the project
