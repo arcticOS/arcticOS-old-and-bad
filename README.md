@@ -30,6 +30,12 @@ Every modern phone company either sells your data or your attention, and they ma
 - OTA updates?
 - User Data Encryption
 
+## Planned Features (Emulator)
+- SIM7600 emulator
+- Better keyboard input
+- Flashlight & frontlight support
+- Audio support
+
 ## Roadmap
 
 - Develop usable demo of OS
