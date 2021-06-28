@@ -14,9 +14,10 @@ Every modern phone company either sells your data or your attention, and they ma
 
 ## Features
 
-- Portable user interface (Written in Python 3)
-- APIs for interfacing with the display, keyboard, and apps
-- Emulator for testing on desktop computers (Using Pygame)
+- User interface written in Python
+- Display server for interfacing with the display from languages other than Python
+- Python APIs for interfacing with the display, keyboard, and apps
+- Emulator for testing on desktop computers (Using Pygame for the display server)
 - Calculator
 - Notes
   
@@ -29,6 +30,7 @@ Every modern phone company either sells your data or your attention, and they ma
 - E-mail client
 - OTA updates?
 - User Data Encryption
+- Support for GUI apps written in languages other than Python
 
 ## Planned Features (Emulator)
 - SIM7600 emulator
@@ -71,10 +73,16 @@ Install dependencies
   pip3 install pygame
 ```
 
+Fix permissions
+```bash
+  chmod +x start.sh
+  chmod +x start-displayserver.sh
+```
+
 Start the emulator
 
 ```bash
-  python3 launcher.py
+  ./start.sh
 ```
 
   

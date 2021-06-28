@@ -1,0 +1,13 @@
+{
+    "OOBEComplete": 0,
+    "OwnerName": "",
+    "EnableEncryption": 0,
+    "MinimalismMode": 0,
+    "Notes": 
+    [
+        {
+            "title": "Welcome to arcticOS!",
+            "content": "Hello, World!\nThis is a note!\nThis line is really long and won't all be put on screen at once!\nThis is more lines!\nThis is another line!\nThis is the last line!"
+        }
+    ]
+}
