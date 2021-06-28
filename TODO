@@ -17,8 +17,6 @@ ARCTICOS:
             - Finish migrating UI toolkit to display-server
             - Display notifications
             - Interrupt for incoming calls/alarms/reminders
-            - Cursor in getString()
-            - Scroll getString() and getMultilineString()
         
         INPUT:
             - Create input server
@@ -40,6 +38,8 @@ ARCTICOS:
     UI:
         - GridView menus
         - Context menus
+        - Cursor in getString()
+        - Scroll getString() and getMultilineString()
 
     APPLICATIONS:
         LAUNCHER:
@@ -49,40 +49,51 @@ ARCTICOS:
             - Quickly enter dialer
             - Customize date format
             - Choose between 12-hour & 24-hour time
+
         CLOCK:
             - Show current time
             - List active alarms
             - Create new alarms and register with timing server
+
         CALENDAR:
             - Switch between days
             - Quick switch between months
             - Create tasks
             - Register reminders with timing server
+
         SETTINGS:
             - Load user preferences
             - Assign human-friendly names
             - Let user edit settings
             - Show (non-editable) build information
             - Press build number 8 times to toggle user/basic/developer modes
+
         MUSIC:
             - Load all music files
             - Sort by album/artist
             - Play in background
+
         PHONE:
             - List contacts
             - Add contacts
             - Dial by number
             - List previously called numbers
             - Speed Dial
+
         MESSAGES:
             - List contacts
             - Add contacts
             - Display messages in a thread
             - Send messages
+            
         EMAIL:
             - Refresh recieved emails
             - Send emails
     EMULATOR:
+        - Frontlight
+        - Flashlight
+        - Audio
+        - Vibration
 
     OTHER:
         - USB Tethering
