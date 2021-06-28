@@ -1,3 +1,3 @@
 #!/bin/bash
-cd display-server
+cd display-service
 python3 server.py

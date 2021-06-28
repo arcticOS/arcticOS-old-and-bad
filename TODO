@@ -9,29 +9,29 @@ ARCTICOS:
         
         BOOT:
             - UBoot
-            - Start servers on boot
+            - Start services on boot
             - Flashable Images
 
-    SERVERS:
+    SERVICES:
         UI:
-            - Finish migrating UI toolkit to display-server
+            - Finish migrating UI toolkit to display-service
             - Display notifications
             - Interrupt for incoming calls/alarms/reminders
         
         INPUT:
-            - Create input server
+            - Create input service
 
         TIMING:
-            - Create timing server
+            - Create timing service
             - Schedule launch of applications
         
         WATCHDOG:
-            - Check status of servers 
+            - Check status of services 
             - Restart hung services
         
         CELLULAR:
             - Automatically check for incoming calls + messages
-            - Notify user via UI server
+            - Notify user via UI service
             - Send messages
             - Start call
 
@@ -53,13 +53,13 @@ ARCTICOS:
         CLOCK:
             - Show current time
             - List active alarms
-            - Create new alarms and register with timing server
+            - Create new alarms and register with timing service
 
         CALENDAR:
             - Switch between days
             - Quick switch between months
             - Create tasks
-            - Register reminders with timing server
+            - Register reminders with timing service
 
         SETTINGS:
             - Load user preferences
@@ -85,7 +85,7 @@ ARCTICOS:
             - Add contacts
             - Display messages in a thread
             - Send messages
-            
+
         EMAIL:
             - Refresh recieved emails
             - Send emails

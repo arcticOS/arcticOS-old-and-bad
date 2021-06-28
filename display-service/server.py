@@ -490,7 +490,7 @@ class DisplayServer(BaseHTTPRequestHandler):
             path = self.path[9:]
             path = base64.b64decode(path)
             path = path.decode("ascii").split("\r")
-            print("INFO: DISPLAYSERVER: Request: " + str(path))
+            print("INFO: DisplayService: Request: " + str(path))
                 
             if(path[0] == "C"): # Clear
                 driver.clear()
@@ -515,7 +515,7 @@ class DisplayServer(BaseHTTPRequestHandler):
 
 if(__name__ == "__main__"):
     webserver = HTTPServer((hostName, serverPort), DisplayServer)
-    print("INFO: DISPLAYSERVER: Started.")
+    print("INFO: DisplayService: Started.")
 
     try:
         webserver.serve_forever()
@@ -523,4 +523,4 @@ if(__name__ == "__main__"):
         pass
 
     webserver.server_close()
-    print("INFO: DISPLAYSERVER: Stopped.")
+    print("INFO: DisplayService: Stopped.")
