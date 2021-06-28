@@ -1,3 +1,5 @@
+#!/usr/bin/env python3
+#
 # arcticOS
 # Copyright (c) 2021 Johnny Stene <jhonnystene@protonmail.com>
 #
