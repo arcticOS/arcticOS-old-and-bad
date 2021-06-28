@@ -13,7 +13,7 @@ ARCTICOS:
             - Flashable Images
 
     SERVICES:
-        UI:
+        DISPLAY:
             - Finish migrating UI toolkit to display-service
             - Display notifications
             - Interrupt for incoming calls/alarms/reminders
