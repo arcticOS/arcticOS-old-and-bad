@@ -71,6 +71,7 @@ Install dependencies
 
 ```bash
   pip3 install pygame
+  sudo apt install screen
 ```
 
 Fix permissions
