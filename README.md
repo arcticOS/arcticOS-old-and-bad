@@ -77,7 +77,7 @@ Install dependencies
 Fix permissions
 ```bash
   chmod +x start.sh
-  chmod +x start-displayserver.sh
+  chmod +x services/display/server.py
 ```
 
 Start the emulator
