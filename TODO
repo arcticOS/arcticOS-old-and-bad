@@ -40,6 +40,7 @@ ARCTICOS:
         - Context menus
         - Cursor in getString()
         - Scroll getString() and getMultilineString()
+        - Get nicer font
 
     APPLICATIONS:
         LAUNCHER:
