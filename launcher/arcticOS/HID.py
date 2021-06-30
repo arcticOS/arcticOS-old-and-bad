@@ -118,6 +118,7 @@ class Display():
         self.height = 176
 
     def make_request(self, path):
+        print(base64.b64encode(bytes(path, "ascii")).decode("ascii"))
         r = requests.get("http://localhost:3502/display/" + base64.b64encode(bytes(path, "ascii")).decode("ascii"))
         return r.text
 
@@ -132,6 +133,7 @@ class Display():
             return [0, 0]
         bounds = self.make_request("B\r" + text + "\r" + str(size))
         bounds = bounds.split(",")
+        print(str(bounds))
         for i in range(0, len(bounds)):
             bounds[i] = int(bounds[i].strip().strip("\n"))
         return bounds

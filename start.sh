@@ -1,7 +1,7 @@
 #!/bin/bash
 echo "Starting display service..."
 if ! screen -list | grep -q 'arctic-display'; then # make sure we don't start too many instances
-    screen -dmS arctic-display ./start-displayservice.sh
+    screen -dmS arctic-display bash -c "cd services/display && ./server.py"
     echo "Started display service."
     sleep 2
 else
