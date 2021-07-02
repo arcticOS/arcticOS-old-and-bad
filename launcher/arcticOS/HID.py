@@ -18,84 +18,21 @@
 
 import os, requests, base64
 
-if os.path.exists('/sys/bus/platform/drivers/gpiomem-bcm2835'): # Check if we're running on an RPI
-    # This is a completely empty keyboard driver that I'm using until I start using the actual devkit for things.
-    class KeyDriver(object):
-        def __init__(self):
-            pass
-
-        def getKey(self): # TODO: This
-            return "ok"
-else:
-    # This reads terminal input and converts it to input for the OS.
-    class KeyDriver(object):
-        def __init__(self):
-            self.inputBuffer = []
-
-        def getKey(self):
-            if(len(self.inputBuffer) > 0):
-                input_char = self.inputBuffer[0]
-                self.inputBuffer = self.inputBuffer[1:]
-                return input_char
-            while True:
-                input_string = input("KEY INPUT: ")
-                if(input_string.startswith("help")):
-                    print("string:<String of text> - Enter a string of text")
-                    print("volup - Volume Up")
-                    print("voldown - Volume Down")
-                    print("light - Frontlight/Flashlight Button")
-                    print("navup - Navigation Pad Up")
-                    print("navdown - Navigation Pad Down")
-                    print("navleft - Navigation Pad Left")
-                    print("navright - Navigation Pad Right")
-                    print("navok - Navigation Pad OK")
-                    print("end - End Call")
-                    print("leftutil - Left Utility Button")
-                    print("rightutil - Right Utility Button")
-                    print("answer - Answer Call")
-                    print("back - Backspace")
-                    print("enter - Enter")
-                elif(input_string.startswith("string:")):
-                    for character in input_string[7:]:
-                        self.inputBuffer.append(character)
-                    input_char = self.inputBuffer[0]
-                    self.inputBuffer = self.inputBuffer[1:]
-                    return input_char
-                elif(input_string.startswith("volup")):
-                    return "vUp"
-                elif(input_string.startswith("voldown")):
-                    return "vDown"
-                elif(input_string.startswith("light")):
-                    return "light"
-                elif(input_string.startswith("navup")):
-                    return "up"
-                elif(input_string.startswith("navdown")):
-                    return "down"
-                elif(input_string.startswith("navleft")):
-                    return "left"
-                elif(input_string.startswith("navright")):
-                    return "right"
-                elif(input_string.startswith("navok")):
-                    return "ok"
-                elif(input_string.startswith("end")):
-                    return "end"
-                elif(input_string.startswith("leftutil")):
-                    return "lUtil"
-                elif(input_string.startswith("rightutil")):
-                    return "rUtil"
-                elif(input_string.startswith("answer")):
-                    return "answer"
-                elif(input_string.startswith("back")):
-                    return "back"
-                elif(input_string.startswith("enter")):
-                    return "enter"
-
-# This extends the KeyDriver so it can provide shared functionality across hardware.
-class KeyInput(KeyDriver):
+class KeyInput():
     def __init__(self):
-        super(KeyDriver, self).__init__()
+        #super(KeyDriver, self).__init__()
         self.inputBuffer = []
     
+    def make_request(self, path):
+        r = requests.get("http://localhost:3503/input/" + base64.b64encode(bytes(path, "ascii")).decode("ascii"))
+        return r.text
+
+    def getKey(self):
+        text = ""
+        while(text == ""):
+            text = self.make_request("S")
+        return text
+
     # This returns true if a character is "printable"
     def isPrintable(self, char):
         if(char in "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ`1234567890-=~!@#$%^&*()_+[]\\{}|;\':\",./<>? "):

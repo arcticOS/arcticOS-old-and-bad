@@ -58,7 +58,7 @@ if(__name__ == "__main__"):
 
     # Very basic main loop with an app selector.
     while True:
-        PhoneDisplay.clear() \
+        PhoneDisplay.clear()
         # Show the time
         # TODO: Get the time instead of using placeholder time
         PhoneDisplay.drawText("12:00 PM", 42, 10, 5)
