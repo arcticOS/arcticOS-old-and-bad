@@ -19,7 +19,7 @@ ARCTICOS:
             - Interrupt for incoming calls/alarms/reminders
         
         INPUT:
-            - Create input service
+            
 
         TIMING:
             - Create timing service

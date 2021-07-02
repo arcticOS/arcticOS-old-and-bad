@@ -15,8 +15,7 @@ Every modern phone company either sells your data or your attention, and they ma
 ## Features
 
 - User interface written in Python
-- Display server for interfacing with the display from languages other than Python
-- Python APIs for interfacing with the display, keyboard, and apps
+- Servers for interfacing with the hardware/emulator from languages other than Python
 - Emulator for testing on desktop computers (Using Pygame for the display server)
 - Calculator
 - Notes
@@ -34,7 +33,6 @@ Every modern phone company either sells your data or your attention, and they ma
 
 ## Planned Features (Emulator)
 - SIM7600 emulator
-- Better keyboard input
 - Flashlight & frontlight support
 - Audio support
 
