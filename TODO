@@ -1,7 +1,6 @@
 ARCTICOS:
     CORE:
         DRIVERS:
-            - Allwinner A13 GPIO
             - Quectel EC-21A
             - Audio
             - Frontlight

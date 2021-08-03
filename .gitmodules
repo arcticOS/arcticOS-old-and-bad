@@ -4,3 +4,6 @@
 [submodule "subarctic"]
 	path = subarctic
 	url = https://github.com/arcticOS/subarctic
+[submodule "pman"]
+	path = pman
+	url = https://github.com/arcticOS/pman
