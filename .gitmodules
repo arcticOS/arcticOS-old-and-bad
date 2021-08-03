@@ -1,0 +1,6 @@
+[submodule "frost"]
+	path = frost
+	url = https://github.com/arcticOS/frost
+[submodule "subarctic"]
+	path = subarctic
+	url = https://github.com/arcticOS/subarctic

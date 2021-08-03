@@ -1,0 +1,100 @@
+ARCTICOS:
+    CORE:
+        DRIVERS:
+            - Allwinner A13 GPIO
+            - Quectel EC-21A
+            - Audio
+            - Frontlight
+            - Flashlight
+        
+        BOOT:
+            - UBoot
+            - Start services on boot
+            - Flashable Images
+
+    SERVICES:
+        DISPLAY:
+            - Finish migrating UI toolkit to display-service
+            - Display notifications
+            - Interrupt for incoming calls/alarms/reminders
+        
+        INPUT:
+            
+
+        TIMING:
+            - Create timing service
+            - Schedule launch of applications
+        
+        WATCHDOG:
+            - Check status of services 
+            - Restart hung services
+        
+        CELLULAR:
+            - Automatically check for incoming calls + messages
+            - Notify user via UI service
+            - Send messages
+            - Start call
+
+    UI:
+        - GridView menus
+        - Context menus
+        - Cursor in getString()
+        - Scroll getString() and getMultilineString()
+        - Get nicer font
+
+    APPLICATIONS:
+        LAUNCHER:
+            - Show actual time
+            - Show battery percentage
+            - Show cellular status 
+            - Quickly enter dialer
+            - Customize date format
+            - Choose between 12-hour & 24-hour time
+
+        CLOCK:
+            - Show current time
+            - List active alarms
+            - Create new alarms and register with timing service
+
+        CALENDAR:
+            - Switch between days
+            - Quick switch between months
+            - Create tasks
+            - Register reminders with timing service
+
+        SETTINGS:
+            - Load user preferences
+            - Assign human-friendly names
+            - Let user edit settings
+            - Show (non-editable) build information
+            - Press build number 8 times to toggle user/basic/developer modes
+
+        MUSIC:
+            - Load all music files
+            - Sort by album/artist
+            - Play in background
+
+        PHONE:
+            - List contacts
+            - Add contacts
+            - Dial by number
+            - List previously called numbers
+            - Speed Dial
+
+        MESSAGES:
+            - List contacts
+            - Add contacts
+            - Display messages in a thread
+            - Send messages
+
+        EMAIL:
+            - Refresh recieved emails
+            - Send emails
+    EMULATOR:
+        - Frontlight
+        - Flashlight
+        - Audio
+        - Vibration
+
+    OTHER:
+        - USB Tethering
