@@ -2,7 +2,7 @@
 
 A collection of Linux applications that together form an open-source and modular mobile operating system.
 
-## The Vision
+## Vision
 
 Every modern phone company either sells your data or your attention, and they make you pay huge amounts to let them do it. I aim to change that, by building a phone that is:
 - Low-cost
@@ -19,7 +19,7 @@ Every modern phone company either sells your data or your attention, and they ma
 - Calculator
 - Notes
   
-## Planned Features
+## Planned features
 - Calls and SMS with the SIM7600* series of modems.
 - IRC and Matrix messages
 - Music Player
@@ -28,8 +28,6 @@ Every modern phone company either sells your data or your attention, and they ma
 - E-mail client
 - OTA updates?
 - User Data Encryption
-
-## Planned Features (Emulator)
 - SIM7600 emulator
 - Flashlight & frontlight support
 - Audio support
@@ -49,27 +47,32 @@ Every modern phone company either sells your data or your attention, and they ma
 - Stress test and improve hardware until it is ready for release
 - Begin shipping final units
 
-## Setup (Desktop)
+## Setup (desktop)
 
 arcticOS on desktop requires Git, Python 3, Pygame 2, and GNU Screen to be installed.
 
-1. Download the main repository
+1. Install dependencies
+```sh
+sudo apt install screen
+```
+
+2. Download the main repository
 ```sh
 git clone https://github.com/arcticOS/arcticOS.git
 ```
 
-2. Download all submodules
+3. Download all submodules
 ```sh
 git submodule init
 git submodule update --recursive --remote
 ```
 
-3. Make `start.sh` executable
+4. Make `start.sh` executable
 ```sh
 chmod +x start.sh
 ```
 
-4. Run `start.sh`
+5. Run `start.sh`
 ```sh
 ./start.sh
 ```
